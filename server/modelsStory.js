@@ -12,6 +12,12 @@ const storySchema = Schema({
             authors:{type:String},
             likes:{type: Number},
             date:{type:Object},
+           imagename:{type:String},
+            
+             image:{
+                  data:Buffer,
+                  contentType:String,
+             },
             creater: { type: Schema.Types.ObjectId, ref: 'Person' },
    
   });

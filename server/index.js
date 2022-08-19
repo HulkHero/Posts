@@ -4,16 +4,23 @@ const cors=require("cors");
 var ObjectId = require('mongodb').ObjectId;
 const bcrypt=require("bcrypt");
 const {signup,login}=require("./users-controllers")
+const multer=require("multer");
 const Hello = require("./module");
 const Person = require("./models");
 const Story = require("./modelsStory");
 const bodyParser = require("body-parser");
-
+const fs= require('fs');
 const cookieParser=require("cookie-parser");
 const {auth} =require("./auth");
 require('dotenv').config();
 const app=express();
-app.use(express.json());
+
+app.use(express.json({limit: "50mb"}));
+app.use(express.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 100000
+}));
 app.use(bodyParser.json());
 mongoose.connect("mongodb+srv://Hulk:Hulk%401322@cluster0.cmdv1.mongodb.net/hulk2?retryWrites=true&w=majority").then((err,res)=>console.log(err));
 app.use(cors());
@@ -31,6 +38,23 @@ app.use((req, res, next) => {
   
     next();
   });
+
+  var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname )
+    }
+});
+  
+var upload = multer({ storage: storage });
+
+
+
+
+
+
  app.get('/getPosts',(rek,res)=>{
   console.log("inside get")
     
@@ -148,24 +172,31 @@ app.get("/",async(req, res) => {
   //   }
    //}).clone().catch(function(err){ console.log(err)});
  });
- app.post('/addStory',async(rek,res)=>{
+ app.post('/addStory',upload.single("image"),async(rek,res)=>{
   console.log("entering stories")
-   id=rek.body.id;
+   //id=rek.body.id;
+   id=7872
    heading=rek.body.heading;
    caption=rek.body.caption;
-  console.log("id",id)
+ 
  const story1 =await new Story({
    heading: heading,
    creater: ObjectId(id),
     caption:caption,
-    date:new Date("<YYYY-mm-dd>"),
-    likes:0,                                // assign the _id from the person
+    date:Date.now(),
+    likes:0,
+    imagename:"image",
+    image: {
+      data: fs.readFileSync('uploads/' + rek.file.filename),
+      contentType: 'image/png'
+  }                                // assign the _id from the person
  });
+
  
  console.log("before save")
  story1.save();
  console.log(story1._id) ///user  id here
-  await Person.updateOne({_id:id},{$push:{Posts:story1._id}})
+  //await Person.updateOne({_id:id},{$push:{Posts:story1._id}})
  
  console.log("after save")
   
