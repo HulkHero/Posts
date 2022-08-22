@@ -78,7 +78,12 @@ app.delete("/deletePost/:id/:userid",async(rek,res)=>{
   userid=rek.params.userid;
   if(id){
     
-     await Person.updateOne({_id:userid},{ $pull:{Posts:id} })     
+     await Person.updateOne({_id:userid},{ $pull:{Posts:id} })
+    const story= await Story.findOne({_id:id})
+    console.log(story)
+     fs.unlink("uploads/"+story.imagename,(err)=>{
+      if(err){console.log(err)}
+     })
      await Story.findByIdAndRemove({_id:id}).exec()
      
      res.status(202).json("Post deleted")
@@ -173,7 +178,7 @@ app.get("/",async(req, res) => {
     date:Date.now(),
     likes:0,
     creatername:creatername,
-    imagename:"image",
+    imagename:rek.file.filename,
     image: {
       data: fs.readFileSync('uploads/' + rek.file.filename),
       contentType: 'image/png'
