@@ -10,6 +10,7 @@ import AddPosts from "./Pages/AddPosts";
 import SignIn from "./Pages/Signin";
 import NoteState from "./context/noteState";
 import Signup from './Pages/Signup';
+import MyPosts from './Pages/MyPosts';
 function App() {
   return (
    <>
@@ -24,8 +25,8 @@ function App() {
     <Route path='addposts' element={<AddPosts/>}></Route>
     <Route exact path='signin' element={<SignIn/>}>
         <Route exact path='signup' element={<Signup/>}/>
-     
-      </Route>
+    </Route>
+    <Route path='myPosts' element={<MyPosts/>}></Route>
    </Routes>
    </Router>
    </NoteState>

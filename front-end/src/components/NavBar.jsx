@@ -33,9 +33,7 @@ const NavBar = () => {
         <Tab label="New Posts " to="/addposts" component={Link} sx={{color:"#FFFFFF"}}>
         
         </Tab>
-        <Tab label="My Posts " sx={{color:"#FFFFFF"}} ><Button variant="h6" component="div" sx={{color:"#FFFFFF"}} >
-          My Posts
-        </Button>
+        <Tab label="My Posts " sx={{color:"#FFFFFF"}} component={Link} to="/myPosts" >
         </Tab>
         <Tab label="Contact" sx={{color:"#FFFFFF"}}><Button sx={{color:"#FFFFFF"}}>
    

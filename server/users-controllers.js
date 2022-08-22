@@ -152,7 +152,8 @@ console.log("inside login")
    res.locals.user={
     userId: existingUser.id,
     email: existingUser.email,
-    token: token
+    token: token,
+    name:existingUser.name
   };
 
   console.log("login")

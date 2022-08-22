@@ -22,8 +22,10 @@ app.use(express.urlencoded({
     parameterLimit: 100000
 }));
 app.use(bodyParser.json());
-mongoose.connect("mongodb+srv://Hulk:Hulk%401322@cluster0.cmdv1.mongodb.net/hulk2?retryWrites=true&w=majority").then((err,res)=>console.log(err));
+
 app.use(cors());
+console.log("env",process.env.MONGODB_URL)
+mongoose.connect(process.env.MONGODB_URL).then((err,res)=>console.log(err));
 
 app.use(cookieParser());
 
@@ -50,63 +52,47 @@ app.use((req, res, next) => {
   
 var upload = multer({ storage: storage });
 
-
-
-
-
-
- app.get('/getPosts',(rek,res)=>{
-  console.log("inside get")
-    
-   Hello.find({ },(rek,result)=>{
-     if (result){
-      res.json(result);
-    
-     }
-
-   })
-
-
-
- })
- app.post("/posts",(rek,res)=>{
-  console.log("in posts")
-     names=rek.body.name;
-     posts=rek.body.posts;
-     email="z"
-     password="hamm"
-     author="hello"
-   console.log("after names")
-     const Hello2 = new Hello({
-      name:names,
-      email:email,
-      password:password,
-      
-      posts:[
-        {
-          heading:posts.heading,
-          caption:posts.caption,
-          date:new Date("<YYYY-mm-dd>"),
-          authors:author,
-          likes:0
-        },
-      ]
-    
-
-     })
-
-     Hello2.save();
-
-     res.json("saved")
-
-
- }) 
-
- app.post("/addPosts",(rek, res)=>{
+app.get('/myPosts/:id',auth,async(rek,res)=>{
   
+  id= rek.params.id
+  console.log("id: ",id)
+  if(id){
+    const user= await Story.find({creater:id})
+    res.status(202).send(user)
  
 
- })
+  }
+  else{
+    res.status(400).json("ID not found.Your are not authorized")
+  }
+
+ 
+ 
+  
+
+})
+
+app.delete("/deletePost/:id/:userid",async(rek,res)=>{
+  console.log("id ")
+  id = rek.params.id;
+  userid=rek.params.userid;
+  if(id){
+    
+     await Person.updateOne({_id:userid},{ $pull:{Posts:id} })     
+     await Story.findByIdAndRemove({_id:id}).exec()
+     
+     res.status(202).json("Post deleted")
+
+
+  }
+  else
+  {
+    res.status(300).send("id not found")
+  }
+})
+
+
+ 
 
   app.post("/signup",signup,(rek,res)=>{
      
@@ -152,8 +138,9 @@ app.get("/data",auth,async(req, res) => {
 app.get("/",async(req, res) => {
   
   //const user=  Person.find()
- const user= await Person.find({},{name:1}).populate('Posts')
+ //const user= await Person.find({},{name:1}).populate('Posts')
 
+ const user= await Story.find()
  //const user=await Story.find({}).populate('creater')
  //console.log(user.creater[0].name)
  res.json(user)
@@ -173,18 +160,19 @@ app.get("/",async(req, res) => {
    //}).clone().catch(function(err){ console.log(err)});
  });
  app.post('/addStory',upload.single("image"),async(rek,res)=>{
-  console.log("entering stories")
-   //id=rek.body.id;
-   id=7872
+  console.log("entering stories") 
    heading=rek.body.heading;
    caption=rek.body.caption;
- 
+   id=rek.body.id;
+   creatername=rek.body.creatername;
+   console.log("id",id)
  const story1 =await new Story({
    heading: heading,
    creater: ObjectId(id),
     caption:caption,
     date:Date.now(),
     likes:0,
+    creatername:creatername,
     imagename:"image",
     image: {
       data: fs.readFileSync('uploads/' + rek.file.filename),
@@ -196,7 +184,7 @@ app.get("/",async(req, res) => {
  console.log("before save")
  story1.save();
  console.log(story1._id) ///user  id here
-  //await Person.updateOne({_id:id},{$push:{Posts:story1._id}})
+  await Person.updateOne({_id:id},{$push:{Posts:story1._id}})
  
  console.log("after save")
   
@@ -204,23 +192,9 @@ app.get("/",async(req, res) => {
 
 
 
-app.post('/addUser',(rek,res)=>{
-  console.log("hello")
-  const Person2 = new Person({
-    _id: new mongoose.Types.ObjectId(),
-    name: 'Idfn Fleming io dsa',
-    email: "zhammad",
-    password:"helloworld",
-    Posts:null,
-  })
-  Person2.save();
 
-  console.log("hello")
-  
-  console.log("hello")
-  console.log("author",Person2._id)
-  res.json("saaved")
-})
+
+
 
 
 

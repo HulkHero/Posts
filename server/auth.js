@@ -7,8 +7,13 @@ const auth = (req, res, next) => {
     return next();
   }
   try {
-    const hello= req.headers
-    const token = req.headers.authorization.split(" ")[0]; // Authorization: 'Bearer TOKEN'
+   
+   // res.locals.user=rek.params.id
+   //const hello= req.headers
+    const token = req.headers.authorization.split(" ")[0]; 
+    
+   
+    // Authorization: 'Bearer TOKEN'
    //const token=req.body.token;
   
     if (!token) {
@@ -16,7 +21,7 @@ const auth = (req, res, next) => {
     }
     const decodedToken = jwt.verify(token, 'supersecret_dont_share');
    // req.userData = { userId: decodedToken.userId };
-   console.log("hello")
+   
     next(); 
   } catch (err) {
     const error = new HttpError('Authentication failedf!', 401);

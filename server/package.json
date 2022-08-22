@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "devrun":"npx nodemon index.js"
   },
-  "author": "",
+  "author": "HUlk",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",

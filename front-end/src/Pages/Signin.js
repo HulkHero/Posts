@@ -23,9 +23,10 @@ import { Alert} from '@mui/material';
 
 const theme = createTheme();
 
-function setSessionToken(userToken,id) {
+function setSessionToken(userToken,id,names) {
   sessionStorage.setItem('token', userToken);
   sessionStorage.setItem('id', id);
+  sessionStorage.setItem('creatername', names);
   console.log("storage")
 }
 
@@ -49,8 +50,9 @@ export default function SignIn() {
       console.log("id ", response.data.userId)
       a.setToken(response.token)
       a.setId(response.data.userId)
+      a.setcreatername(response.data.name)
       setOpenSnack(true)
-      setSessionToken(response.data.token,response.data.userId)
+      setSessionToken(response.data.token,response.data.userId,response.data.name)
      
     }).catch((error)=>console.log(error));
   };
@@ -86,7 +88,7 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
-          <Snackbar open={openSnack} autoHideDuration={6000} onClose={()=>setOpenSnack(false)}>
+          <Snackbar open={openSnack} autoHideDuration={4000} onClose={()=>setOpenSnack(false)}>
   <Alert onClose={()=>{setOpenSnack(false)}} severity="success" variant="filled" sx={{ width: '100%' }}>
     Logged in successfully
   </Alert>

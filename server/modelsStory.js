@@ -9,10 +9,12 @@ const storySchema = Schema({
             heading:{ type:String,
                                     },
             caption:{type:String},
-            authors:{type:String},
+           
             likes:{type: Number},
             date:{type:Object},
+            creatername:{type:String},
            imagename:{type:String},
+
             
              image:{
                   data:Buffer,
