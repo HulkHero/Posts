@@ -78,7 +78,7 @@ app.delete("/deletePost/:id/:userid",async(rek,res)=>{
   userid=rek.params.userid;
   if(id){
     
-     await Person.updateOne({_id:userid},{ $pull:{Posts:id} })
+     await Person.updateOne({_id:userid},{$pull:{Posts:id} })
     const story= await Story.findOne({_id:id})
     console.log(story)
      fs.unlink("uploads/"+story.imagename,(err)=>{
@@ -142,14 +142,15 @@ app.get("/data",auth,async(req, res) => {
 // stories an user 
 app.get("/",async(req, res) => {
   
-  //const user=  Person.find()
+  const person= await Person.find({},{email:1})
  //const user= await Person.find({},{name:1}).populate('Posts')
 
- const user= await Story.find()
+ const posts= await Story.find()
  //const user=await Story.find({}).populate('creater')
  //console.log(user.creater[0].name)
- res.json(user)
-
+ res.send({person,
+           posts})
+res.end()
  // await Story.find({}, (err, result) => {
   //   if (err) {
       // res.json("error")
@@ -176,7 +177,7 @@ app.get("/",async(req, res) => {
    creater: ObjectId(id),
     caption:caption,
     date:Date.now(),
-    likes:0,
+    
     creatername:creatername,
     imagename:rek.file.filename,
     image: {
@@ -184,15 +185,35 @@ app.get("/",async(req, res) => {
       contentType: 'image/png'
   }                                // assign the _id from the person
  });
-
- 
- console.log("before save")
  story1.save();
- console.log(story1._id) ///user  id here
   await Person.updateOne({_id:id},{$push:{Posts:story1._id}})
- 
+ res.send("saved")
  console.log("after save")
   
+})
+
+app.put("/likePost/:id/:userId",async(rek,res)=>{
+     console.log("entering like post")
+       id =rek.params.id;
+       userId =rek.params.userId;
+       console.log("id",id)
+       const user= await Story.findOneAndUpdate({_id:id},{$addToSet:{likes:userId}})
+       const user2=await Story.findOne({_id:id},{likes:1})
+    console.log("user",user2)
+    res.send(user2)
+      
+
+})
+app.put("/dislikePost/:id/:userId",async(rek,res)=>{
+  console.log("entering dislike post")
+    id =rek.params.id;
+    userId =rek.params.userId;
+    console.log("id",id)
+    const user= await Story.findOneAndUpdate({_id:id},{$pull:{likes:userId}})
+    const user2=await Story.findOne({_id:id},{likes:1})
+    console.log("user",user2)
+    res.send(user2)
+
 })
 
 

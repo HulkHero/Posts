@@ -3,22 +3,85 @@ import {Paper,Button} from "@mui/material"
 import { useState ,useEffect} from 'react'
 import Cards from './Cards';
 import Axios from "axios";
+import axios from 'axios';
+import { useContext } from 'react';
+import NoteContext from '../context/noteContext';
 
 
 const CardContainer = () => {
  // var data;
- 
+ const a= useContext(NoteContext)
  const [data,setData]=useState([])
+ const [lik,setLik]=useState()
+ if (a.token)
+ {}
+ else{
+   const getToken=sessionStorage.getItem("token");
+  
+     const getid=sessionStorage.getItem("id");
+     const getcreatername=sessionStorage.getItem("creatername");
+   if(getToken!==null){
+     a.setToken(getToken)
+     a.setId(getid)
+     a.setcreatername(getcreatername)
+   }
+ }
    
   
     useEffect(() => {
-       Axios.get("http://localhost:5000/").then((response) => {
-        console.log("response:data", response.data)
-         setData(response.data)
+      const cancelToken=Axios.CancelToken.source()
+       Axios.get("http://localhost:5000/",{cancelToken:cancelToken.token}).then((response) => {
+        console.log("response:data", response)
+         setData(response.data.posts)
+        }).catch((error) => {
+            if(axios.isCancel(err)){
+              console.log("error:cancel",err)
+            }
         })
-     
-        
+
+        return(()=>{
+          cancelToken.cancel()
+
+        }
+        )
+
     },[])
+
+    const onlike=(id)=>{
+      if (a.id){
+        Axios.put(`http://localhost:5000/likePost/${id}/${a.id}`).then((response) => {
+         
+          console.log("response:dislike", response)
+          setLik(response.data.likes.length);
+          console.log(lik)
+      
+        })
+
+      }
+      else{ console.log("login first")}
+     
+
+    }
+    const ondislike=(id)=>{
+      
+      Axios.put(`http://localhost:5000/dislikePost/${id}/${a.id}`).then((response) => {
+        setLik(response.data.likes.length);
+           
+        // setData(data.map((val)=>{
+         
+        //   if (val.likes.length>=0 && data.length>0)
+        //   {
+        //   return(
+        //     val._id==id && val.likes?  val.likes=val.likes.filter(item=>item !==  a.id): val
+        //   )}
+        // }))
+        
+     
+      })
+
+   }
+   console.log("rendering")
+
   return (
     <>
    
@@ -28,12 +91,12 @@ const CardContainer = () => {
            const base64= btoa(new Uint8Array(element.image.data.data).reduce(function (data, byte) {
             return data + String.fromCharCode(byte);
         }, ''));
-        console.log("base64",base64)
+       
         const img=`data:image/png;base64,${base64}`
        return (
         <>
         <div style={{display: 'flex',flexDirection: 'column',alignItems:"center"}}>
-         <Cards key={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption}></Cards>
+         <Cards key={element._id} ondislike={ondislike} userId={a.id} likes={element.likes} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onlike={onlike} displayLike={lik}></Cards>
         </div>
         </>
       )

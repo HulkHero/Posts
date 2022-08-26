@@ -1,7 +1,7 @@
 import React from 'react'
 import Axios from 'axios'
 import { useState,useContext,useRef,useEffect } from 'react';
-import { Button, TextField ,Grid} from '@mui/material';
+import { Button, TextField ,Grid, Snackbar, Alert} from '@mui/material';
 import NoteContext from "../context/noteContext"
 const AddPosts = () => {
   const a = useContext(NoteContext)
@@ -27,6 +27,7 @@ const AddPosts = () => {
     creatername:a.creatername,
     
   });
+  const [openSnack, setOpenSnack] = useState(false)
   
   const [previewUrl, setPreviewUrl] = useState();
   const [isValid, setIsValid] = useState(false);
@@ -88,9 +89,18 @@ const AddPosts = () => {
   for (var key of formData.entries()) {
     console.log(key[0] + ', ' + key[1])
   }
-     Axios.post("http://localhost:5000/addStory",formData,{headers:{'content-type': 'multipart/form-data'}}).then((response)=>{
+  if(a.token){
+    Axios.post("http://localhost:5000/addStory",formData,{headers:{'content-type': 'multipart/form-data'}}).then((response)=>{
       console.log(response)
+      setOpenSnack(true)   
      })
+
+
+  }
+  else{
+    console.log("login first")
+  }
+     
   }
   return (
     <Grid container  sx={{display: 'flex',justifyContent: 'center', mt:"20px"} }>
@@ -122,6 +132,11 @@ const AddPosts = () => {
       <Grid item xs={12}><TextField type="caption" value={user.caption} name="caption" id="outlined-basic" onChange={(e)=>handleChange(e)}></TextField></Grid>
       <Grid item xs={12}><Button variant="contained" type="submit" >Post</Button></Grid>
       </form>
+      <Snackbar open={openSnack} autoHideDuration={4000} onClose={()=>setOpenSnack(false)}>
+  <Alert onClose={()=>{setOpenSnack(false)}} severity="success" variant="filled" sx={{ width: '100%' }}>
+    Post Added
+  </Alert>
+</Snackbar>
 
 
     </Grid>

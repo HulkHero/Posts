@@ -10,7 +10,8 @@ const storySchema = Schema({
                                     },
             caption:{type:String},
             
-            likes:{type: Number},
+            likes:{type:[String],
+                   default:[]},
             date:{type:Object},
             creatername:{type:String},
            imagename:{type:String},
