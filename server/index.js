@@ -145,7 +145,7 @@ app.get("/",async(req, res) => {
   const person= await Person.find({},{email:1})
  //const user= await Person.find({},{name:1}).populate('Posts')
 
- const posts= await Story.find()
+ const posts= await Story.find().sort({_id:-1})
  //const user=await Story.find({}).populate('creater')
  //console.log(user.creater[0].name)
  res.send({person,

@@ -34,8 +34,8 @@ const CardContainer = () => {
         console.log("response:data", response)
          setData(response.data.posts)
         }).catch((error) => {
-            if(axios.isCancel(err)){
-              console.log("error:cancel",err)
+            if(axios.isCancel(error)){
+              console.log("error:cancel",error)
             }
         })
 
