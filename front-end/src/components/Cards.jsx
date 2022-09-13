@@ -50,8 +50,12 @@ var result = date.toLocaleDateString('en', options);
           </Avatar>
         }
         action={
+          props.isMyPosts==true? 
           <IconButton onClick={()=>{props.onDelete(props.id)}}>
            <DeleteIcon  ></DeleteIcon>
+          </IconButton>:
+          <IconButton>
+            <MoreVertIcon></MoreVertIcon>
           </IconButton>
         }
         title={props.name}

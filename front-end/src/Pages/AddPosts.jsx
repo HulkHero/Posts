@@ -120,8 +120,8 @@ const AddPosts = () => {
         accept=".jpg,.png,.jpeg"
         onChange={pickedHandler}
       />
-      <div style={{maxWidth:"300px",maxHeight:"300px"}}>
-          {previewUrl && <img src={previewUrl} style={{maxWidth:"300px",maxHeight:"300px"}} alt="Preview" />}
+      <div style={{maxWidth:"200px",maxHeight:"300px"}}>
+          {previewUrl && <img src={previewUrl} style={{maxWidth:"200px",maxHeight:"300px"}} alt="Preview" />}
           {!previewUrl && <p>Please pick an image.</p>}
         </div>
          <Button type="button" onClick={pickImageHandler}>

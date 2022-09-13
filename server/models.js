@@ -15,7 +15,7 @@ const personSchema = Schema({
   },
   Posts: [{ type: Schema.Types.ObjectId, ref: 'Story' }],
 
-  likedPosts: [{ type: Schema.Types.ObjectId, ref: 'Story' }],
+  likedPosts: [{ type: Schema.Types.ObjectId, ref: 'Story' }]
 
 });
 

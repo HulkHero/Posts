@@ -96,7 +96,7 @@ const CardContainer = () => {
        return (
         <>
         <div style={{display: 'flex',flexDirection: 'column',alignItems:"center"}}>
-         <Cards key={element._id} ondislike={ondislike} userId={a.id} likes={element.likes} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onlike={onlike} displayLike={lik}></Cards>
+         <Cards key={element._id} ondislike={ondislike} userId={a.id} likes={element.likes} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onlike={onlike} displayLike={lik} isMyPosts={false}></Cards>
         </div>
         </>
       )

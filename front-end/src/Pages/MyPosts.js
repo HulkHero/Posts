@@ -8,6 +8,7 @@ import NoteContext from '../context/noteContext'
 
 const MyPosts = () => {
     const a = useContext(NoteContext)
+    const [lik,setLik]=useState()
     if (a.token)
     {}
     else{
@@ -56,9 +57,29 @@ const MyPosts = () => {
        }))}
 
        )
-     
+    }
+    const ondislike=(id)=>{
+      
+      Axios.put(`http://localhost:5000/dislikePost/${id}/${a.id}`).then((response) => {
+        setLik(response.data.likes.length);   
+      })
+
+   }
+   const onlike=(id)=>{
+    if (a.id){
+      Axios.put(`http://localhost:5000/likePost/${id}/${a.id}`).then((response) => {
+       
+        console.log("response:dislike", response)
+        setLik(response.data.likes.length);
+        console.log(lik)
+    
+      })
 
     }
+    else{ console.log("login first")}
+   
+
+  }
 
 
   return (
@@ -75,7 +96,7 @@ const MyPosts = () => {
        return (
         <>
         <div style={{display: 'flex',flexDirection: 'column',alignItems:"center"}}>
-         <Cards key={element._id} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onDelete={onDelete} ></Cards>
+         <Cards key={element._id} id={element._id} ondislike={ondislike} userId={a.id} likes={element.likes}  name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onlike={onlike}  displayLike={lik} onDelete={onDelete} isMyPosts={true} ></Cards>
         </div>
         </>
       )
