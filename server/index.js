@@ -8,6 +8,7 @@ const multer=require("multer");
 const Hello = require("./module");
 const Person = require("./models");
 const Story = require("./modelsStory");
+const Friends = require("./modelsFriends");
 const bodyParser = require("body-parser");
 const fs= require('fs');
 const cookieParser=require("cookie-parser");
@@ -216,11 +217,201 @@ app.put("/dislikePost/:id/:userId",async(rek,res)=>{
 
 })
 
+app.get("/addFriends",async(rek,res)=>{
+     console.log("get friends")
+     const user= await Person.find({},{name:1})
+     console.log("user",user); 
+     res.send(user);
+})
+
+app.post("/sendRekuest",async(rek,res)=>{
+
+        senderId = rek.body.senderId;
+        targetId=rek.body.targetId;
+        // Friends.updateOne({createrId: senderId},{
+        //   createrId:senderId,
+        //   $push:{rekuestSents:targetId},
+        // },
+        // {upsert: true}) 
+      Friends.findOne({},{createrId:senderId},async(err,friend)=>{
+  
+          if(friend){
+            console.log(" inside friend",friend);
+           await Friends.updateOne({createrId:senderId},{$push:{rekuestSents:targetId}} )
+             
+           
+
+           var frien= await Friends.findOne({createrId:targetId}).clone().catch(function(err){ console.log(err)})
+
+             if(frien){
+              console.log("friend",friend);
+                   await Friends.updateOne({createrId:targetId},{$push:{rekuestRecieved:senderId}} )
+                       console.log("hello")
+                
+             }
+             else{
+                      console.log("inside else else")
+                      const friends=  new Friends({
+                       createrId:ObjectId(targetId),
+                       rekuestRecieved:[senderId]
+                      })
+                     await friends.save();
+                       
+                      var frie= await Friends.findOne({createrId:targetId})
+
+                      console.log("fri ", frie._id)
+                        ///storing in person friends
+                      await Person.findOneAndUpdate({_id:targetId},{friends:frie._id})
+
+
+                   }
 
 
 
+           
+      //      Friends.findOne({},{createrId:targetId},async(err,friends)=>{
+      //       if(friends){
+      //         console.log("checking receiver exists",friend);
+      //         await Friends.updateOne({createrId:targetId},{$push:{rekuestRecieved:senderId}} )
+      //         console.log("hell")
 
 
+      //       }
+      //       else{
+      //         console.log("inside else else receiver does not exist")
+      //         const friends= await new Friends({
+      //          createrId:ObjectId(targetId),
+      //          rekuestRecieved:[senderId]
+      //         })
+      //        await friends.save();
+
+              
+
+      //       }
+
+      //  })
+
+            console.log("hello")
+
+            
+          }
+          else{
+            //first entry in friends
+            console.log("inside else")
+               const friends=  new Friends({
+                createrId:ObjectId(senderId),
+                rekuestSents:[targetId]
+               })
+              await friends.save();
+                
+              // finding new documnet id in freinds
+              var fri= await Friends.findOne({createrId:senderId}).clone().catch(function(err){ console.log(err)})
+
+              console.log("fri ", fri._id)
+                ///storing in person friends
+             await  Person.findOneAndUpdate({_id:senderId},{friends:fri._id}).clone().catch(function(err){ console.log(err)})
+
+             var frien= await Friends.findOne({createrId:targetId}).clone().catch(function(err){ console.log(err)})
+
+             if(frien){
+              console.log("friend",friend);
+                   await Friends.updateOne({createrId:targetId},{$push:{rekuestRecieved:senderId}} )
+                       console.log("hello")
+                
+             }
+             else{
+                      console.log("inside else else")
+                      const friends=  new Friends({
+                       createrId:ObjectId(targetId),
+                       rekuestRecieved:[senderId]
+                      })
+                     await friends.save();
+                       
+                      var frie= await Friends.findOne({createrId:targetId})
+
+                      console.log("fri ", frie._id)
+                        ///storing in person friends
+                      await Person.findOneAndUpdate({_id:targetId},{friends:frie._id})
+
+
+                   }
+
+
+            //   Person.findOneAndUpdate({_id:senderId},{friends:})
+              
+              //  Friends.findOne({},{createrId:targetId},async(err,friends)=>{
+              //       if(friends){
+              //         console.log("friend",friend);
+              //         await Friends.updateOne({createrId:targetId},{$push:{rekuestRecieved:senderId}} )
+              //         console.log("hello")
+
+
+              //       }
+              //       else{
+              //         console.log("inside else else")
+              //         const friends=  new Friends({
+              //          createrId:ObjectId(targetId),
+              //          rekuestRecieved:[senderId]
+              //         })
+              //        await friends.save();
+                       
+              //         var frie= await Friends.findOne({createrId:targetId})
+
+              //         console.log("fri ", frie._id)
+              //           ///storing in person friends
+              //         await Person.findOneAndUpdate({_id:targetId},{friends:frie._id})
+
+
+              //       }
+
+              //  }).clone().catch(function(err){ console.log(err)})
+               
+          }
+         }) 
+         console.log("frienssd");
+        console.log("Updating",senderId,targetId);
+
+        res.send("hello")
+
+
+})
+
+
+
+app.get("/showRekuests/:userId",async (rek,res)=>{
+     
+  var userId=rek.params.userId;
+  console.log("userId: " , userId);
+  const user= await  Friends.findOne({createrId: userId}).populate("rekuestRecieved","name")
+  // console.log("recieved rekuests",user); 
+  res.send(user);
+
+})
+
+app.put("/acceptRekuest",async(rek,res)=>{
+    var userId= rek.body.senderId;
+    var senId=rek.body.targetId;
+     // settings in user
+   await Friends.findOneAndUpdate({createrId:userId},{$pull :{rekuestRecieved:senId},
+                                  $push:{friends:senId}});
+
+    // setting in rekuest sender                              
+    await Friends.findOneAndUpdate({createrId:senId},{$pull :{rekuestSents:userId},
+      $push:{friends:userId}});
+                        
+
+   res.send("done")
+
+})
+
+app.get("/showFriends/:userId",async(rek,res)=>{
+      var userId= rek.params.userId;
+      const user= await Friends.findOne({createrId:userId}).populate("friends","name")
+       
+      res.send(user);
+ 
+
+})
 
 
 

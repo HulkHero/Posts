@@ -14,7 +14,7 @@ const NavBar = () => {
     const [line, setLine] = useState(0)
   return (
     
-    <AppBar position="fixed">
+    <AppBar position="sticky">
     <div >
       <Box sx={{display:{xs:'none',sm:"block"}}}>
       <Toolbar sx={{display: 'flex',}}>
@@ -38,9 +38,9 @@ const NavBar = () => {
         </Tab>
         <Tab label="My Posts " sx={{color:"#FFFFFF"}} component={Link} to="/myPosts" >
         </Tab>
-        <Tab label="Contact" sx={{color:"#FFFFFF"}}><Button sx={{color:"#FFFFFF"}}>
+        <Tab label="Add Friends" sx={{color:"#FFFFFF"}} component={Link} to="/addFriends" ><Button sx={{color:"#FFFFFF"}}>
    
-          Contact
+          Add Friends
         </Button>
         </Tab>
         </Tabs>
@@ -86,7 +86,7 @@ const NavBar = () => {
                <Link  style={{textDecoration:'none'}}   to="/"> <Button onClick={()=>setDrawer(false)} sx={{ color:"#fff" }}>Posts</Button></Link>
                <Link style={{textDecoration:'none'}}  to="/myPosts"> <Button onClick={()=>setDrawer(false)} sx={{ color:"#fff" }}>{"My Posts  " }  </Button></Link>
                <Link style={{textDecoration:'none'}}  to="/addposts"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Add Post</Button></Link>
-               <Link style={{textDecoration:'none'}}  to="contact"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Contact</Button></Link>
+               <Link style={{textDecoration:'none'}}  to="/addFriends"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Add Friends</Button></Link>
 
             </Grid>
             

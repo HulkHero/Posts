@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card,CardHeader,Avatar,CardMedia,CardContent,Typography,CardActions,IconButton, } from '@mui/material';
+import { Card,CardHeader,Avatar,CardMedia,CardContent,Typography,CardActions,IconButton, Container, } from '@mui/material';
 import {red} from"@mui/material/colors";
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -42,7 +42,7 @@ var result = date.toLocaleDateString('en', options);
 
   return (
    
-    <Card elevation={3} sx={{  maxWidth:"80%",minWidth:"80%",alignSelf:"center",mb:5,mt:2}}>
+    <Card elevation={3} sx={{  maxWidth:"80%",minWidth:"80%",alignSelf:"center",mb:2,mt:2,borderRadius:"10px"}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }}>
@@ -62,13 +62,15 @@ var result = date.toLocaleDateString('en', options);
         subheader={result}
       />
       <Typography variant="h5" component="h5" sx={{paddingLeft:"6px"}}>{props.heading}</Typography>
+      <Container sx={{display: "flex", justifyContent:"center"}}>
       <CardMedia
         component="img"
         
         image={props.image}
         alt="Paella dish"
-        sx={{maxHeight:"300px",maxWidth:"400px",mt:2}}
+        sx={{maxHeight:"300px",maxWidth:"400px",mt:2,position:"center",justifyContent:"center",objectFit:"scale-down"}}
       />
+      </Container>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
          {props.caption}
