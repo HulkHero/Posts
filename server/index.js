@@ -149,8 +149,8 @@ app.get("/",async(req, res) => {
  const posts= await Story.find().sort({_id:-1})
  //const user=await Story.find({}).populate('creater')
  //console.log(user.creater[0].name)
- res.send({person,
-           posts})
+ res.send(
+           posts)
 res.end()
  // await Story.find({}, (err, result) => {
   //   if (err) {
@@ -166,6 +166,33 @@ res.end()
   //   }
    //}).clone().catch(function(err){ console.log(err)});
  });
+
+ 
+ 
+ app.get("/batchData/:skip/:limit",async(rek,res)=>{
+  try{
+    
+    
+    var skip=rek.params.skip;
+    var limit=rek.params.limit;
+    console.log(skip,limit)
+   await  Story.find().sort({_id:-1}).skip(skip).limit(2).then((result)=>{
+        if(result.length>0){
+   
+          res.send(result)
+        }  
+        else{
+          res.status(300).send("not found")
+        }
+    })
+  }
+  catch(error){
+    res.send(error)
+  }
+})
+
+
+
  app.post('/addStory',upload.single("image"),async(rek,res)=>{
   console.log("entering stories") 
    heading=rek.body.heading;
@@ -405,12 +432,32 @@ app.put("/acceptRekuest",async(rek,res)=>{
 })
 
 app.get("/showFriends/:userId",async(rek,res)=>{
-      var userId= rek.params.userId;
-      const user= await Friends.findOne({createrId:userId}).populate("friends","name")
-       
-      res.send(user);
+  try{
+    var userId= rek.params.userId;
+    const user= await Friends.findOne({createrId:userId},{friends:1}).populate("friends","name")
+     
+    res.send(user);
+
+  }
+  catch(err) {
+    res.send(err)
+  }
  
 
+})
+
+app.get("/showAddFriends/:searche",async(rek,res)=>{
+    var searche = rek.params.searche;
+    console.log("search",searche); 
+     
+    const user= await Person.find({name: new RegExp(searche.slice(0,2), 'i') })
+    console.log(user)
+   if(user){
+     res.send(user)
+   }
+   else{
+    res.send("no user found")
+   }
 })
 
 

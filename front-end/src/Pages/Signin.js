@@ -19,7 +19,7 @@ import { Outlet } from "react-router-dom"
 import { Modal } from '@mui/material';
 import {Snackbar  } from '@mui/material'
 import { Alert} from '@mui/material';
-
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -32,7 +32,7 @@ function setSessionToken(userToken,id,names) {
 
 export default function SignIn() {
   const a = useContext(NoteContext)
-
+const Navigate= useNavigate();
   const [open, setOpen] = useState(false)
   const [openSnack, setOpenSnack] = useState(false)
   const [show, setSignup] = useState(false)
@@ -53,6 +53,7 @@ export default function SignIn() {
       a.setcreatername(response.data.name)
       setOpenSnack(true)
       setSessionToken(response.data.token,response.data.userId,response.data.name)
+      Navigate("/posts")
      
     }).catch((error)=>console.log(error));
   };

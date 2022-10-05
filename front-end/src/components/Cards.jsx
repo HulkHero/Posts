@@ -89,7 +89,7 @@ var result = date.toLocaleDateString('en', options);
          {  like==true? <FavoriteIcon sx={{color:'#ab0909'}} />  :<FavoriteBorderIcon></FavoriteBorderIcon>    
          }
         </IconButton>
-        <Typography variant="body2" color="text.primary">{props.displayLikes? props.displayLikes :props.likes.length}</Typography>
+        <Typography variant="body1" color="text.primary" sx={{alignSelf:"center"}}>{props.displayLikes? props.displayLikes :props.likes.length}</Typography>
         </CardActions>
         
 

@@ -13,9 +13,9 @@ const NavBar = () => {
   const [drawer, setDrawer] = React.useState(false)
     const [line, setLine] = useState(0)
   return (
-    
-    <AppBar position="sticky">
-    <div >
+     <div style={{marginBottom:"4rem"}}>
+    <AppBar position="fixed" sx={{marginBottom:"4rem",mb:"50px"}}>
+     
       <Box sx={{display:{xs:'none',sm:"block"}}}>
       <Toolbar sx={{display: 'flex',}}>
         <IconButton
@@ -28,7 +28,7 @@ const NavBar = () => {
           <MenuIcon />
         </IconButton>
         <Tabs textColor="secondary"  indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
-        <Tab label="Posts" to="/" component={Link} sx={{color:"#FFFFFF"}} >
+        <Tab label="Posts" to="/posts" component={Link} sx={{color:"#FFFFFF"}} >
         
           
        
@@ -45,7 +45,7 @@ const NavBar = () => {
         </Tab>
         </Tabs>
        
-    <Button  sx={{ml:'auto',textColor:"#FFFFFF",color:"#FFFFFF"}}><Link to="signin" style={{textDecoration:"none",textColor:"#FFFFFF",color:"#FFFFFF"}} >Login </Link> </Button>
+    <Button  sx={{ml:'auto',textColor:"#FFFFFF",color:"#FFFFFF"}}><Link to="/" style={{textDecoration:"none",textColor:"#FFFFFF",color:"#FFFFFF"}} >Login </Link> </Button>
               </Toolbar>
 
     </Box>
@@ -57,7 +57,7 @@ const NavBar = () => {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/Posts"
             sx={{
               mr: "auto",
               pr:"4rem",
@@ -79,11 +79,11 @@ const NavBar = () => {
             onOpen={()=>(setDrawer(true))}
           >
             <Grid container  sx={{Width:"50%",height:"100%", Display:"flex",flexDirection:"column", backgroundColor:"primary.main"}} >
-            <Link to="/signin" style={{textDecoration:"none",textColor:"#FFFFFF",color:"#FFFFFF",minWidth:"50%"}}><Button  sx={{textColor:"#FFFFFF",color:"#FFFFFF"}}>
+            <Link to="/" style={{textDecoration:"none",textColor:"#FFFFFF",color:"#FFFFFF",minWidth:"50%"}}><Button  sx={{textColor:"#FFFFFF",color:"#FFFFFF"}}>
               Login
             </Button>
             </Link>
-               <Link  style={{textDecoration:'none'}}   to="/"> <Button onClick={()=>setDrawer(false)} sx={{ color:"#fff" }}>Posts</Button></Link>
+               <Link  style={{textDecoration:'none'}}   to="/posts"> <Button onClick={()=>setDrawer(false)} sx={{ color:"#fff" }}>Posts</Button></Link>
                <Link style={{textDecoration:'none'}}  to="/myPosts"> <Button onClick={()=>setDrawer(false)} sx={{ color:"#fff" }}>{"My Posts  " }  </Button></Link>
                <Link style={{textDecoration:'none'}}  to="/addposts"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Add Post</Button></Link>
                <Link style={{textDecoration:'none'}}  to="/addFriends"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Add Friends</Button></Link>
@@ -101,8 +101,9 @@ const NavBar = () => {
 
 
 
-    </div>
+            
     </AppBar>
+    </div>
  
  
 

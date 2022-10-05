@@ -8,7 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import { IconButton, ListItemButton, ListItemIcon,Icon } from '@mui/material';
+import { IconButton, ListItemButton, ListItemIcon,Icon, TextField, Button,Box } from '@mui/material';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import NoteContext from "../context/noteContext"
 
@@ -18,40 +18,52 @@ const AddFriends = () => {
    const a= useContext(NoteContext);
 
     const [Data, setData] = useState([])
-   useEffect(() => {
-     Axios.get("http://localhost:5000/addFriends").then(response => {
+  //  useEffect(() => {
+  //    Axios.get("http://localhost:5000/addFriends").then(response => {
 
-     console.log(response);
-      setData(response.data);
-     })
+  //    console.log(response);
+  //     setData(response.data);
+  //    })
    
-   },[ ])
+  //  },[ ])
 
-   const SendRekuest=(targetId)=>{
-       Axios.post("http://localhost:5000/sendRekuest",{senderId: a.id, targetId: targetId}).then(response => {
-          console.log(response);
-
+   const SendRekuest= async(targetId)=>{
+      await Axios.post("http://localhost:5000/sendRekuest",{senderId: a.id, targetId: targetId}).then(response => {
+         
        })
+
+   }
+
+   const handleSubmit = (event) => {
+      event.preventDefault();
+      const Data= new FormData(event.currentTarget)
+      Axios.get(`http://localhost:5000/showAddFriends/${Data.get("search")}`).then((response) => {console.log(response)
+            setData(response.data)})
 
    }
    
 
-
+console.log("data",Data)
   return (
     <> 
 
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
      <ListItem> <div>
-        <Typography component="h5" variant='h5' >
+        <Typography component="h5" variant='h5' sx={{mb:"5px"}}>
             Send Rekuests
         </Typography>
+        <Box component="form" onSubmit={handleSubmit} >
+
+        <TextField name="search" label="search" type="search" ></TextField>
+        <Button variant="contained" sx={{marginTop:"10px",ml:"5px"}} type="submit">Search</Button>
+        </Box>
     </div>
     </ListItem>
 
     <Divider variant='middle '></Divider>
     {
       Data &&  Data.map((element)=>{
-           
+           console.log(element.name)
             return(
                 <>
                 <ListItem alignItems="center">

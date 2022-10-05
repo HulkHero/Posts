@@ -1,22 +1,18 @@
 import React from 'react'
-import {Paper,Button,Box} from "@mui/material"
+import {Paper,Button} from "@mui/material"
 import { useState ,useEffect} from 'react'
 import Cards from './Cards';
 import Axios from "axios";
 import axios from 'axios';
 import { useContext } from 'react';
 import NoteContext from '../context/noteContext';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import CircularProgress from '@mui/material/CircularProgress'
+
+
 const CardContainer = () => {
  // var data;
  const a= useContext(NoteContext)
  const [data,setData]=useState([])
  const [lik,setLik]=useState()
- const [skip,setSkip]=useState(0)
- const [hasMore,setHasMore]=useState(true)
-// var skip=0;
- var limit=2;
  if (a.token)
  {}
  else{
@@ -33,18 +29,23 @@ const CardContainer = () => {
    
   
     useEffect(() => {
-      Axios.get(`http://localhost:5000/batchData/${skip}/${limit}`).then((response)=>{
-       console.log("response")
-      
-        console.log("response",response)
-         setSkip(2)
-        setData(response.data)
-     
+      const cancelToken=Axios.CancelToken.source()
+       Axios.get("http://localhost:5000/",{cancelToken:cancelToken.token}).then((response) => {
+        console.log("response:data", response)
+         setData(response.data)
+        }).catch((error) => {
+            if(axios.isCancel(error)){
+              console.log("error:cancel",error)
+            }
+        })
 
-    })
-      
+        return(()=>{
+          cancelToken.cancel()
 
-    },[a.id])
+        }
+        )
+
+    },[ ])
 
     const onlike=(id)=>{
       if (a.id){
@@ -79,58 +80,14 @@ const CardContainer = () => {
       })
 
    }
-
-   
    console.log("rendering")
-
-   const fetchMoreData=async()=>{
-    setSkip(skip+2);
-    console.log("inside fetchMoreData")
-    
-    
-    console.log("skip",skip)
-    console.log("limit",limit)
-    await Axios.get(`http://localhost:5000/batchData/${skip}/${limit}`).then((response)=>{
-       
-      
-        console.log("response",response)
-       
-        
-        setData(data.concat(response.data))
-      
-
-    }).catch(response=>{
-      console.log("response error",response)
-      if (response.response.status ==300){
-        console.log("300")
-        setHasMore(false)
-      }
-    })
-   }
 
   return (
     <>
-   {
-    <Paper evaluation={2} style={{minWidth: "100%",display:"flex:",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100%",backgroundColor:"#cde8cc"}} spacing={2}>
-    <InfiniteScroll
-     dataLength={data.length}
-     next={fetchMoreData}
-     hasMore={hasMore}
-     loader={ 
-      <div style={{ display: 'flex',justifyContent:"center" }}>
-      <Box sx={{ display: 'flex',justifyContent:"center" }}>
-      <h4 >Loading...</h4>
-    </Box>
-    </div>
-    }
-    //  <h4>loading...</h4>
-     endMessage={
-      <p style={{ textAlign: "center" }}>
-        <b>Khatam!!!</b>
-      </p>
-    }
-    >      
-    { data.map((element)=>{
+   
+    <Paper evaluation={2} style={{minWidth: "100%",display:"flex:",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100%",backgroundColor:"#cde8cc"}} spacing={1}>
+          
+    {data && data.map((element)=>{
            const base64= btoa(new Uint8Array(element.image.data.data).reduce(function (data, byte) {
             return data + String.fromCharCode(byte);
         }, ''));
@@ -146,9 +103,8 @@ const CardContainer = () => {
        
     })}
 
-</InfiniteScroll>
+
     </Paper>
-}
     </>
   )
 }
@@ -193,19 +149,3 @@ export default CardContainer
 
     </Paper>
     </>*/
-
-    // const cancelToken=Axios.CancelToken.source()
-    // Axios.get("http://localhost:5000/",{cancelToken:cancelToken.token}).then((response) => {
-    //  console.log("response:data", response)
-    //   setData(response.data)
-    //  }).catch((error) => {
-    //      if(axios.isCancel(error)){
-    //        console.log("error:cancel",error)
-    //      }
-    //  })
-
-    //  return(()=>{
-    //    cancelToken.cancel()
-
-    //  }
-    //  )

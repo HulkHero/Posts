@@ -20,14 +20,17 @@ function App() {
      <NoteState>
      <Router>
    <CssBaseline/>
+   <NavBar></NavBar>
    
-   <NavBar/>
     <Routes>
-    <Route exact path='/' element={ <Home/> } ></Route>
-    <Route path='addposts' element={<AddPosts/>}></Route>
-    <Route exact path='signin' element={<SignIn/>}>
+    <Route exact path='/' element={<SignIn/>}>
         <Route exact path='signup' element={<Signup/>}/>
-    </Route>
+    </Route> 
+    
+    
+    
+    <Route  path='/posts' element={ <Home/> } ></Route>
+    <Route path='addposts' element={<AddPosts/>}></Route>
     <Route path='myPosts' element={<MyPosts/>}></Route>
      <Route path="addFriends" element={<FriendsHome/>}/>
    </Routes>

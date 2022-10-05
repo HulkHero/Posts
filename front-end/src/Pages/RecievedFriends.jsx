@@ -32,14 +32,15 @@ const RecievedFriends = () => {
    const AcceptRekuest=(targetId)=>{
        Axios.put("http://localhost:5000/acceptRekuest",{senderId: a.id, targetId: targetId}).then(response => {
           console.log(response);
-        //   setData(data.map((item)=>{
-        //
-         //  }))
+          setData(Data && Data.map((item)=>{
+               return item._id!=targetId;
+        
+          }))
        })
 
    }
    
-
+  console.log("received rekuesests data:", Data)
 
   return (
     <> 
