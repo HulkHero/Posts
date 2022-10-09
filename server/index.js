@@ -13,8 +13,10 @@ const bodyParser = require("body-parser");
 const fs= require('fs');
 const cookieParser=require("cookie-parser");
 const {auth} =require("./auth");
+const { JsonStreamStringify } = require("json-stream-stringify");
 require('dotenv').config();
 const app=express();
+MongoClient = require('mongodb').MongoClient;
 
 app.use(express.json({limit: "50mb"}));
 app.use(express.urlencoded({
@@ -190,6 +192,58 @@ res.end()
     res.send(error)
   }
 })
+// app.get("/streamData",async(rek,res)=>{
+//   // try{
+    
+//   //   console.log("steream")
+    
+//   //   await Story.find().sort({_id:-1}).cursor().pipe(JSONStream.stringify()).pipe(res)
+//   //    console.log("stream2")
+//   // // }
+//   // catch(error){
+//   //   res.send(error)
+//   // }
+
+//   // var stream = await Story.find().sort({_id:-1}).stream();
+
+//   //  stream.on('data', function(data) {
+//   //    res.write(JSON.stringify(data));
+//   //     });
+
+//   //    stream.on('end', function() {
+//   //    res.end();
+//   //      })
+
+
+//   // const cursor = Story.find().stream();
+//   // x = new JsonStreamStringify(cursor).pipe(res);
+//   // x.on("data", (doc) => {
+//   //   res.write(doc);
+//   // });
+
+
+// // const changeStream = Story.watch();
+
+// // while (await changeStream.hasNext()) {
+// //     let change = await changeStream.next();
+// //     if (change == null) console.log("event doc was null!!");
+// //     console.log(change);  
+// //     res.write(change)                            // notified change event document
+// // } 
+// res.set('Content-Type', 'application/json'); // Required?
+// res.writeHead(200, { 'Content-Type': 'application/json'}); // Required?
+
+// var stream = Story.find()
+//     .sort({_id:-1})
+//     .stream()
+//     .pipe(JSONStream.stringify())
+//     .pipe(res)
+
+
+    
+// });
+
+
 
 
 

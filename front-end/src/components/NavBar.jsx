@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBar,Tabs,Tab,Box,Drawer,Grid,Typography} from '@mui/material'
+import {AppBar,Tabs,Tab,Box,Drawer,Grid,Typography, Tooltip} from '@mui/material'
 import {Link} from 'react-router-dom'
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
@@ -7,8 +7,16 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import theme from '../Theme';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import HomeIcon from '@mui/icons-material/Home';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import PersonIcon from '@mui/icons-material/Person';
+
 const NavBar = () => {
   const [drawer, setDrawer] = React.useState(false)
     const [line, setLine] = useState(0)
@@ -27,25 +35,40 @@ const NavBar = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Tabs textColor="secondary"  indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
-        <Tab label="Posts" to="/posts" component={Link} sx={{color:"#FFFFFF"}} >
+        <Tabs textColor="secondary" fontSize="large" sx={{marginLeft:"auto"}} indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
+        <Tab sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===0? <Tooltip title="Home"><HomeIcon/></Tooltip> :< Tooltip title="Home"><HomeOutlinedIcon/></Tooltip>} to="/posts" component={Link}  >
         
           
        
         </Tab>
-        <Tab label="New Posts " to="/addposts" component={Link} sx={{color:"#FFFFFF"}}>
+        <Tab sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===1? <Tooltip title="New Post"><PostAddIcon></PostAddIcon></Tooltip>: <Tooltip title="New Post"><PostAddOutlinedIcon></PostAddOutlinedIcon></Tooltip>} to="/addposts" component={Link} >
         
         </Tab>
-        <Tab label="My Posts " sx={{color:"#FFFFFF"}} component={Link} to="/myPosts" >
+        <Tab  sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===2? <Tooltip title="Profile"><PersonIcon/></Tooltip>:<Tooltip title="Profile"><PersonOutlineOutlinedIcon></PersonOutlineOutlinedIcon></Tooltip>} to="/myPosts" component={Link}  >
         </Tab>
-        <Tab label="Add Friends" sx={{color:"#FFFFFF"}} component={Link} to="/addFriends" ><Button sx={{color:"#FFFFFF"}}>
+        <Tab sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        "& :hover":{
+          color:"#FFFFFF",
+        },
+        color:"#FFFFFF"}}  icon={line===3? <Tooltip title="Add Friends"><PersonAddAlt1Icon/></Tooltip>:<Tooltip title="Add Friends"><PersonAddAltOutlinedIcon></PersonAddAltOutlinedIcon></Tooltip>}  component={Link} to="/addFriends" ><Button sx={{color:"#FFFFFF"}}>
    
           Add Friends
         </Button>
         </Tab>
         </Tabs>
        
-    <Button  sx={{ml:'auto',textColor:"#FFFFFF",color:"#FFFFFF"}}><Link to="/" style={{textDecoration:"none",textColor:"#FFFFFF",color:"#FFFFFF"}} >Login </Link> </Button>
+    <Button  sx={{ml:'auto',textColor:"#FFFFFF",color:"#FFFFFF"}}><Link to="/posts" style={{textDecoration:"none",textColor:"#FFFFFF",color:"#FFFFFF"}} >Login </Link> </Button>
               </Toolbar>
 
     </Box>

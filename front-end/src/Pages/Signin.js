@@ -79,7 +79,7 @@ const Navigate= useNavigate();
   </Box>
 </Modal>
 
-        <Button onClick={() => setSignup(!show)}><Link sx={{textDecoration: 'none'}} to='/signin/signup'>Signup</Link></Button>
+        <Button onClick={() => setSignup(!show)}><Link sx={{textDecoration: 'none'}} to='/signup'>Signup</Link></Button>
         { show==true? <Outlet></Outlet>:" "}
         <Box
           sx={{

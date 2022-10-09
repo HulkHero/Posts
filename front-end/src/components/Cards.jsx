@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useContext } from 'react';
 import NoteContext from '../context/noteContext';
 import {useState,useEffect} from "react"
-const Cards = (props) => {
+const Cards = (props) => {  
   const a= useContext(NoteContext)
     console.log("a.id",a.id)
   const [like, setLike] = useState(false)
@@ -41,7 +41,6 @@ var result = date.toLocaleDateString('en', options);
   
 
   return (
-   
     <Card elevation={3} sx={{  maxWidth:"80%",minWidth:"80%",alignSelf:"center",mb:2,mt:2,borderRadius:"10px"}}>
       <CardHeader
         avatar={
@@ -65,7 +64,6 @@ var result = date.toLocaleDateString('en', options);
       <Container sx={{display: "flex", justifyContent:"center"}}>
       <CardMedia
         component="img"
-        
         image={props.image}
         alt="Paella dish"
         sx={{maxHeight:"300px",maxWidth:"400px",mt:2,position:"center",justifyContent:"center",objectFit:"scale-down"}}
@@ -79,9 +77,7 @@ var result = date.toLocaleDateString('en', options);
       <CardActions >
         <IconButton onClick={()=>{ if(like==true){props.ondislike(props.id);setnum(props.likes.length--);
         setLike(false)
-
        }else{
-          
           props.onlike(props.id);
           setLike(true)
           setnum(props.likes.length++)
@@ -91,8 +87,6 @@ var result = date.toLocaleDateString('en', options);
         </IconButton>
         <Typography variant="body1" color="text.primary" sx={{alignSelf:"center"}}>{props.displayLikes? props.displayLikes :props.likes.length}</Typography>
         </CardActions>
-        
-
         </Card>
         
 
