@@ -2,6 +2,7 @@ import React from 'react'
 import {AppBar,Tabs,Tab,Box,Drawer,Grid,Typography, Tooltip} from '@mui/material'
 import {Link} from 'react-router-dom'
 import Toolbar from '@mui/material/Toolbar';
+import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
  import { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
@@ -16,16 +17,66 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import PersonIcon from '@mui/icons-material/Person';
+import InputBase from '@mui/material/InputBase';
 
+import SearchIcon from '@mui/icons-material/Search';
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius:"50px",
+  // borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '16ch',
+      // '&:focus': {
+      //   width: '20ch',
+      // },
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '8ch',
+      // '&:focus': {
+      //   width: '20ch',
+      // },
+    },
+  },
+}));
 const NavBar = () => {
   const [drawer, setDrawer] = React.useState(false)
     const [line, setLine] = useState(0)
   return (
-     <div style={{marginBottom:"4rem"}}>
-    <AppBar position="fixed" sx={{marginBottom:"4rem",mb:"50px"}}>
+     <div style={{marginBottom:"3rem"}}>
+    <AppBar position="fixed" sx={{marginBottom:"2rem",mb:"50px"}}>
      
-      <Box sx={{display:{xs:'none',sm:"block"}}}>
-      <Toolbar sx={{display: 'flex',}}>
+      <Box sx={{display:{xs:'none',sm:"block",minHeight:"50px"}}}>
+      <Toolbar sx={{display: 'flex',minHeight:"50px", "&.MuiToolbar-root":{minHeight:"50px"}}}>
         <IconButton
           size="large"
           edge="start"
@@ -35,7 +86,23 @@ const NavBar = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Tabs textColor="secondary" fontSize="large" sx={{marginLeft:"auto"}} indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
+        <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search>
+        <Tabs textColor="secondary" fontSize="large"   sx={{
+          marginLeft:"auto",
+          marginRight:"auto",
+    "& button": { borderRadius: 4 },
+    "& button:hover": { backgroundColor: "blue" },
+    "& button:focus": { backgroundColor: "yellow" },
+    "& button:active": { backgroundColor: "green" }
+  }} indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
         <Tab sx={{'& .MuiSvgIcon-root':{
           fontSize:"xx large",
         },
@@ -58,8 +125,19 @@ const NavBar = () => {
         <Tab sx={{'& .MuiSvgIcon-root':{
           fontSize:"xx large",
         },
-        "& :hover":{
-          color:"#FFFFFF",
+        //  "& :hover":{
+        //    backgroundColor:"#FFFFFF",
+        //  },
+        "&.MuiButtonBase-root":{
+          '& :hover':{
+            minWidth:"50px",
+            
+            padding:"0px",
+            margin:"0px",
+            backgroundColor:"#003767b3",
+            textColor:"#3767b3",
+              
+          },
         },
         color:"#FFFFFF"}}  icon={line===3? <Tooltip title="Add Friends"><PersonAddAlt1Icon/></Tooltip>:<Tooltip title="Add Friends"><PersonAddAltOutlinedIcon></PersonAddAltOutlinedIcon></Tooltip>}  component={Link} to="/addFriends" ><Button sx={{color:"#FFFFFF"}}>
    
@@ -68,13 +146,13 @@ const NavBar = () => {
         </Tab>
         </Tabs>
        
-    <Button  sx={{ml:'auto',textColor:"#FFFFFF",color:"#FFFFFF"}}><Link to="/posts" style={{textDecoration:"none",textColor:"#FFFFFF",color:"#FFFFFF"}} >Login </Link> </Button>
+    <Button  sx={{ml:'auto',color:"#FFFFFF"}}><Link to="/" style={{textDecoration:"none",color:"#FFFFFF"}} >Login </Link> </Button>
               </Toolbar>
 
     </Box>
 
-    <Box sx={{display:{xs:"block",sm:"none"}}}>
-      <Toolbar sx={{display:"flex",justifyContent:"center"}}>
+    <Box sx={{display:{xs:"block",sm:"none",minHeight:"50px"}}}>
+      <Toolbar sx={{display:"flex",justifyContent:"center",minHeight:"50px"}}>
               <Button onClick={()=>{setDrawer(!drawer)}} sx={{ mr:"auto", color:"#fff",width:"50px" }} ><MenuRoundedIcon></MenuRoundedIcon></Button>
               <Typography
             variant="h6"
