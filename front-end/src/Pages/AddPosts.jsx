@@ -1,8 +1,47 @@
 import React from 'react'
 import Axios from 'axios'
 import { useState,useContext,useRef,useEffect } from 'react';
-import { Button, TextField ,Grid, Snackbar, Alert} from '@mui/material';
+import { Button, TextField ,Grid, Snackbar, Alert,styled,IconButton} from '@mui/material';
 import NoteContext from "../context/noteContext"
+import AddAPhotoRoundedIcon from '@mui/icons-material/AddAPhotoRounded';
+const CssTextField = styled(TextField)({
+  maxWidth:"600px",
+  marginTop:"20px",
+   ".MuiFormLabel-root":{
+    textColor:"black",
+    color:"black",
+  
+   },
+
+   "& .MuiInputBase-input":{
+    color:"black",
+  
+    minWidth:"250px",
+
+   },
+
+  '& label.Mui-focused': {
+    color: '#0097a7',
+   
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'white',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#0097a7',
+    },
+    '&:hover fieldset': {
+      borderColor: '#0097a7',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#0097a7',
+
+     
+    },
+  },
+});
+
 const AddPosts = () => {
   const a = useContext(NoteContext)
 
@@ -103,14 +142,17 @@ const AddPosts = () => {
      
   }
   return (
-    <Grid container  sx={{display: 'flex',justifyContent: 'center', mt:"20px"} }>
+    <div style={{backgroundColor:"#f0f2f5",minHeight:"90vh",display:"flex",justifyContent:"center"}}>
+    <Grid container   sx={{ maxWidth:"50%",  display: 'flex',justifyContent: 'center', mt:"20px",backgroundColor:"#ffffff",borderRadius:"40px"} }>
       <form onSubmit={(e)=>onSubmit(e)}>
-      <Grid item xs={12}><TextField type="heading" value={user.heading} name="heading" id="outlined-basic"  onChange={(e)=>handleChange(e)}
+      <Grid item xs={12} ><CssTextField type="heading" label="heading" value={user.heading} name="heading" id="outlined-basic"  onChange={(e)=>handleChange(e)}
       sx={{ ':hover':{
         borderColor: "#cde8cc",
         borderRadius: "50px",
-      }}}
-      ></TextField></Grid> 
+      }, marginTop:"2.4rem"}}
+      ></CssTextField>
+      <Grid item xs={12}><CssTextField label="caption" type="caption" value={user.caption} name="caption" id="outlined-basic" onChange={(e)=>handleChange(e)}></CssTextField></Grid>
+      </Grid> 
           <Grid item xs={12}>
           <input
         
@@ -124,13 +166,12 @@ const AddPosts = () => {
           {previewUrl && <img src={previewUrl} style={{maxWidth:"200px",maxHeight:"300px"}} alt="Preview" />}
           {!previewUrl && <p>Please pick an image.</p>}
         </div>
-         <Button type="button" onClick={pickImageHandler}>
-          PICK IMAGE
+         <Button variant="contained" startIcon={<AddAPhotoRoundedIcon />} sx={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}  type="button" onClick={pickImageHandler}>
+          
          </Button>
           </Grid>
 
-      <Grid item xs={12}><TextField type="caption" value={user.caption} name="caption" id="outlined-basic" onChange={(e)=>handleChange(e)}></TextField></Grid>
-      <Grid item xs={12}><Button variant="contained" type="submit" >Post</Button></Grid>
+      <Grid item xs={12} sx={{display:"flex",flexDirection:"row"}}><Button variant="contained" type="submit" sx={{alignSelf:"flex-end",marginLeft:"auto",mt:"20px",width:"100%"}}>Post</Button></Grid>
       </form>
       <Snackbar open={openSnack} autoHideDuration={4000} onClose={()=>setOpenSnack(false)}>
   <Alert onClose={()=>{setOpenSnack(false)}} severity="success" variant="filled" sx={{ width: '100%' }}>
@@ -140,6 +181,7 @@ const AddPosts = () => {
 
 
     </Grid>
+    </div>
   )
 }
 

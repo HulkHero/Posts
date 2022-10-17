@@ -50,6 +50,7 @@ const Navigate= useNavigate();
       console.log("id ", response.data.userId)
       a.setToken(response.token)
       a.setId(response.data.userId)
+      console.log(response.token)
       a.setcreatername(response.data.name)
       setOpenSnack(true)
       setSessionToken(response.data.token,response.data.userId,response.data.name)

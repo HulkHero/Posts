@@ -4,7 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-
+import {useState} from "react"
 import {Link} from 'react-router-dom'
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,9 +14,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Axios from 'axios';
 
-const theme = createTheme();
+import theme from "../Theme";
 
 export default function SignUp() {
+  const [errorMail, setErrorMail] = useState(false)
+
   const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -24,7 +26,8 @@ export default function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
     });
-  
+    if(data.get('email').includes("@gmail.com"))
+    {
      await Axios.post("http://localhost:5000/signup", {
         name:data.get('name'),
         email:data.get('email'),
@@ -36,6 +39,11 @@ export default function SignUp() {
        // a.setToken(response.data.token)
       
       });
+    }
+    else{
+      alert("invalid input")
+      setErrorMail("true")
+    }
     ;
   };
 
@@ -80,6 +88,8 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  error={errorMail}
+                  helperText={errorMail? "Must include @gmail.com": " "}
                 />
               </Grid>
               <Grid item xs={12}>

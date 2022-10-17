@@ -25,10 +25,25 @@ const Search = styled('div')(({ theme }) => ({
   borderRadius:"50px",
   // borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
+  '&:hover,&:focus': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
+    //  transform:"scaleX(1.1)"
+    "@keyframes fade":{
+      "0%":{
+        marginRight:"20px",
+        paddingRight:"0px"
+
+      },
+      "100%":{
+        marginRight:"0px",
+        paddingRight:"20px"
+      }
+     
+    },
+    animation:"fade 0.6s linear normal forwards",
+    animationIterationCount:"1",
   },
-  marginLeft: 0,
+  marginRight: "20px",
   width: '100%',
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(1),
@@ -67,6 +82,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       // },
     },
   },
+  "&:visited":{
+    transform:"scaleX(1.1)",
+  }
 }));
 const NavBar = () => {
   const [drawer, setDrawer] = React.useState(false)
@@ -86,7 +104,7 @@ const NavBar = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Search>
+        <Search >
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>

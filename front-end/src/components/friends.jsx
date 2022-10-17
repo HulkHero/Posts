@@ -28,7 +28,7 @@ export default function AlignItemsList() {
 
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
      <ListItem> <div>
-        <Typography component="h5" variant='h5' >
+        <Typography component="h6" variant='h6' >
             Friends
         </Typography>
     </div>
@@ -49,7 +49,7 @@ export default function AlignItemsList() {
         </ListItemAvatar>
         <ListItemText
           primary={element.name}
-         
+          
         />
       </ListItem>
       <Divider variant="inset" component="li" />
