@@ -10,9 +10,9 @@ import AddPosts from "./Pages/AddPosts";
 import SignIn from "./Pages/Signin";
 import NoteState from "./context/noteState";
 import Signup from './Pages/Signup';
-import MyPosts from './Pages/MyPosts';
-import AddFriends from './Pages/AddFriends';
+
 import FriendsHome from './Pages/FriendsHome';
+import Profile from './Pages/Profile';
 function App() {
   return (
    <>
@@ -31,7 +31,7 @@ function App() {
     
     <Route  path='/posts' element={ <Home/> } ></Route>
     <Route path='addposts' element={<AddPosts/>}></Route>
-    <Route path='myPosts' element={<MyPosts/>}></Route>
+    <Route path='myPosts' element={<Profile/>}></Route>
      <Route path="addFriends" element={<FriendsHome/>}/>
    </Routes>
    </Router>

@@ -3,12 +3,14 @@ const mongoose = require("mongoose")
 const cors=require("cors");
 var ObjectId = require('mongodb').ObjectId;
 const bcrypt=require("bcrypt");
+const sharp = require('sharp')
 const {signup,login}=require("./users-controllers")
 const multer=require("multer");
 const Hello = require("./module");
 const Person = require("./models");
 const Story = require("./modelsStory");
 const Friends = require("./modelsFriends");
+const Profile = require("./ProfileModel");
 const bodyParser = require("body-parser");
 const fs= require('fs');
 const cookieParser=require("cookie-parser");
@@ -170,7 +172,7 @@ res.end()
  });
 
  
- 
+ // using at home page
  app.get("/batchData/:skip/:limit",async(rek,res)=>{
   try{
     
@@ -243,11 +245,11 @@ res.end()
     
 // });
 
+// for streams set status to 206 partial data
 
 
 
-
- app.post('/addStory',upload.single("image"),async(rek,res)=>{
+app.post('/addStory',upload.single("image"),async(rek,res)=>{
   console.log("entering stories") 
    heading=rek.body.heading;
    caption=rek.body.caption;
@@ -272,6 +274,81 @@ res.end()
  res.send("saved")
  console.log("after save")
   
+})
+
+const uploadProfile = multer({
+  limits: {
+      fileSize: 10485760 //in bytes
+  },
+  fileFilter(req, file, cb) {
+      if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+          return cb(new Error('Only images allowed'))
+      }
+      cb(undefined, true)
+  }
+})
+app.post('/avatar', uploadProfile.single('avatar'), async (rek, res) => {
+  console.log("he")
+  const buffer = await sharp(rek.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+  console.log(buffer)
+  console.log(rek.body.status)
+  const cid=rek.body.createrId
+  const status=rek.body.status
+  Profile.find({createrId: cid },async function(err, docs) //find if documents that satisfy the criteria exist
+{     
+    if(docs.length > 0) //if exists
+    {
+
+       await Profile.updateOne({createrId:cid},{Status:status,
+        avatar:{
+          data:buffer,
+          ContentType: 'image/png',
+        }})
+        console.log(docs); // print out what it sends back
+    }
+    else // if it does not 
+    {
+        const newProfile=await new Profile({
+          createrId:ObjectId(cid),
+          Status:status,
+          avatar:{
+            data: buffer,
+            contentType: 'image/png'
+
+          }
+        })
+        newProfile.save()
+        Person.updateOne({_id:cid},{profile:newProfile._id}).exec()
+        res.send("saved")
+        console.log("Not in docs");
+    }
+});
+
+  
+//   await req.user.save()
+//   res.status(200).send()
+// }, (error, req, res, next) => {
+//   res.status(400).send({error: "Something went wrong"})
+})
+app.get("/getProfile/:id",async(rek,res)=>{
+  try{
+    const cid=rek.params.id
+    Profile.find({createrId:cid}).then((response)=>{
+      if(response.length>0){
+         console.log("hello")
+        res.send(response)
+      }
+      else{
+        res.status(404).send("error")
+      }
+    })
+
+  }
+  catch(err){
+    console.log(error)
+    res.status(404).send("error")
+  }
+
 })
 
 app.put("/likePost/:id/:userId",async(rek,res)=>{
@@ -489,9 +566,9 @@ app.get("/showFriends/:userId",async(rek,res)=>{
   try{
     var userId= rek.params.userId;
     const user= await Friends.findOne({createrId:userId},{friends:1}).populate("friends","name")
-     
+    
     res.send(user);
-
+   
   }
   catch(err) {
     res.send(err)
@@ -515,7 +592,38 @@ app.get("/showAddFriends/:searche",async(rek,res)=>{
 })
 
 
+app.get("/getStatus/:id/:friendId",async(rek,res)=>{
+   var id=rek.params.id
+   var fid=rek.params.friendId;
+   console.log("insideStatus")
+  //  Person.find({_id:id}).populate({path:"friends",select: "friends",populate:{
+  //   path: "friends",select:"_id"
 
+  //  }}).then(res=>{
+    
+  //     if(res){
+
+  //       console.log("res",res)
+  //       res.forEach(element => {
+  //        console.log("hello",element.friends)
+  //        element.friends.forEach(doc =>{
+
+  //         console.log("hello2",doc)
+  //         doc.forEach(d=>{
+  //           console.log("hello3",d)
+  //         })
+  //        }) 
+  //       });
+  //     }
+  //  })
+  //  })
+  // console.log("user",user)
+  
+  const user = await Profile.find({createrId:fid},{Status:1})
+  console.log(user)
+  res.send(user)
+
+})
 
 
 

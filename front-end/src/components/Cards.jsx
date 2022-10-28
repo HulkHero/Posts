@@ -41,7 +41,7 @@ var result = date.toLocaleDateString('en', options);
   
 
   return (
-    <Card elevation={3} sx={{  maxWidth:"70%",minWidth:"70%",alignSelf:"center",mb:2,mt:2,borderRadius:"10px"}}>
+    <Card elevation={3} sx={{  maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }}>

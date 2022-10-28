@@ -80,6 +80,7 @@ const AddPosts = () => {
     const fileReader = new FileReader();
     fileReader.onload = () => {
       setPreviewUrl(fileReader.result);
+      console.log("filereade")
     };
     fileReader.readAsDataURL(file);
   }, [file]);

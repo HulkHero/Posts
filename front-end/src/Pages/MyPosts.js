@@ -39,10 +39,13 @@ const MyPosts = () => {
           console.log("return my posts",response.data)
 
         }
+      
         
      
 
-      }).catch(err=>console.log("error",err))
+      }).catch(response => {
+        alert(response.status, "you are not authorized")
+      })
       
     }, [ ])
 
