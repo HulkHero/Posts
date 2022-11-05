@@ -15,12 +15,14 @@ export default function AlignItemsList() {
 
   const a = useContext(NoteContext)
     const [data, setData] = useState([]);
-   
+    const [avatar, setAvatar] = useState();
     useEffect(() => {
       if(a.id){
     Axios.get(`http://localhost:5000/showFriends/${a.id}`).then((res) => {
-      console.log(res);
-     setData(res.data.friends);
+      console.log(res,"hellllll");
+      setAvatar(res.data.img)
+      console.log(res.data.img,"her")
+     setData(res.data.user.friends);
     }) } 
     
     }, [])
@@ -29,7 +31,7 @@ export default function AlignItemsList() {
   return (
     <> 
 
-    <List sx={{ width: '100%', maxWidth: 360, backgroundColor:"#f0f2f5" }}>
+    <List sx={{ width: '100%', maxWidth: 360, backgroundColor:"#f0f2f5",ml:"2%" }}>
      <ListItem> <div>
         <Typography component="h6" variant='h6' >
             Friends
@@ -37,10 +39,16 @@ export default function AlignItemsList() {
     </div>
     </ListItem>
     <Divider variant='middle '></Divider>
-    {data && data.map((element)=>{
+    {data && data.map((element,index)=>{
+          let img12= avatar[index]
+          const base64= btoa(new Uint8Array(img12.avatar.data.data).reduce(function (data, byte) {
+            return data + String.fromCharCode(byte);
+        }, ''));
+      
+        const img=`data:image/png;base64,${base64}`
      return(
       <>
-       <FriendItem props={element} id={a.id} ></FriendItem>
+       <FriendItem props={element} img={img} id={a.id} ></FriendItem>
      </>)
     })}
     </List>

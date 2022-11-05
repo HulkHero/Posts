@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 var upload = multer({ storage: storage });
 
 app.get('/myPosts/:id',auth,async(rek,res)=>{
-  
+  try{
   id= rek.params.id
   console.log("id: ",id)
   if(id){
@@ -67,7 +67,8 @@ app.get('/myPosts/:id',auth,async(rek,res)=>{
  
 
   }
-  else{
+  }
+  catch(error){
     res.status(400).json("ID not found.Your are not authorized")
   }
 
@@ -565,13 +566,81 @@ app.put("/acceptRekuest",async(rek,res)=>{
 app.get("/showFriends/:userId",async(rek,res)=>{
   try{
     var userId= rek.params.userId;
-    const user= await Friends.findOne({createrId:userId},{friends:1}).populate("friends","name")
     
-    res.send(user);
+ 
+    // res.send(user);
    
   }
   catch(err) {
     res.send(err)
+  }
+  try {
+    var count=0
+    let img=[];
+    // console.log("hello")
+    var userId= rek.params.userId;
+    const user= await Friends.findOne({createrId:userId},{friends:1}).populate("friends","name")
+      //  const profile= await Friends.findOne({createrId:userId},{friends:1}).populate("friends","_id")
+    // const profile= await Friends.findOne({createrId:userId},{friends:1}).populate({path:"friends",select:"createrId",populate:{path:"profile",select:"Status"} })
+
+     Friends.findOne({createrId:userId},{friends:1}).then(async (resp)=>{
+        if(resp){
+          console.log(resp,"res")
+          resp.friends.forEach(async(element)=>{
+            var img1=await Profile.findOne({createrId:element._id},{avatar:1})
+            if(img1){
+              img[count]=img1
+              img1=null
+              count=count+1
+            }
+            if(count==resp.friends.length){
+              console.log("done")
+              res.send({img,user})
+
+            }
+           
+          })
+
+         
+
+        }
+    })
+    console.log(profile,"profile updated") 
+    
+    
+    profile.friends.forEach(async(element) => {
+      console.log(element._id,"img")
+      var img1 = await Profile.findOne({createrId:element},{avatar:1})
+      console.log(img1._id,"avatar")
+      if(img1){
+        img[count]= img1
+        img1=null
+        // console.log(img,"img1")
+        count=count+1;
+        console.log(count,"count")
+      }
+      console.log(count,"count1")
+      
+    });
+    console.log(count,"count2")
+    console.log("ppp",profile.friends.length)
+   console.log("psda",count)
+   if(profile.length){
+
+
+    
+    if(count==profile.friends.length){
+      console.log("hello11")
+      console.log(img,"hello")
+    }
+  }
+
+    // const img=await Profile.findMany({_id:profile._id})
+
+
+  }
+  catch(err){
+
   }
  
 

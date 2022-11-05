@@ -186,7 +186,7 @@ useEffect( ()=>{
     </Grid>
     </form>
     </> 
-  )
+  ) 
 }
 
 export default MyProfile

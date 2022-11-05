@@ -36,6 +36,9 @@ const RecievedFriends = () => {
                return item._id!=targetId;
         
           }))
+          if(Data.length==0){
+            setData("no rekuests")
+          }
        })
 
    }

@@ -47,7 +47,7 @@ const MyPosts = () => {
         alert(response.status, "you are not authorized")
       })
       
-    }, [ ])
+    }, [ a.id])
 
     const onDelete=(id)=>{
 

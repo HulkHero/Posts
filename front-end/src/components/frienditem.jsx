@@ -25,19 +25,20 @@ const FriendItem = (props) => {
     <ListItem alignItems="center">
       
       <ListItemAvatar>
-        <Avatar >
-          {props.props.name[0]}
+        <Avatar alt="Remy Sharp" src={props.img}>
+          
         </Avatar>
       </ListItemAvatar>
       <div >
       <ListItemText onMouseOver={()=>setShow(true)} onMouseOut={()=>setShow(false)}
         primary={props.props.name}
         sx={{":hover":{
-            cursor:"pointer"
+            cursor:"pointer",
+            textDecoration:"underline"
         }}}
       >
       </ListItemText>
-       {show? <div style={{position:"absolute",minWidth:"150px",zIndex:"10000",backgroundColor:"white",marginLeft:"10px",padding:"10px"}} >Status: {text}</div>
+       {show? <div style={{position:"absolute",minWidth:"150px",zIndex:"10000",backgroundColor:"white",marginLeft:"10px",padding:"10px",borderRadius:"10px",boxShadow:"0px 0px 10px 1px #0097a7"}} >Status: {text}</div>
        :" "
   }
   </div>
