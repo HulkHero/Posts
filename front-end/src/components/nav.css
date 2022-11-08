@@ -1,0 +1,15 @@
+div.MuiTabs-flexContainer > .MuiButtonBase-root{
+    min-width: 90px !important;
+    
+    
+} 
+
+
+.ns{
+    position: fixed; /* Make it stick/fixed */
+    display: block;
+top: 0px;
+height:auto;
+opacity: 1;
+transition: height 10s;
+}

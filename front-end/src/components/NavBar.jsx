@@ -18,7 +18,7 @@ import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import InputBase from '@mui/material/InputBase';
-
+import "./nav.css"
 import SearchIcon from '@mui/icons-material/Search';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -87,13 +87,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }));
 const NavBar = () => {
+  window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+    
+    document.getElementById("ns").style.height = "0px";
+    document.getElementById("ns").style.opacity = "0";
+  } else {
+    document.getElementById("ns").style.height = "auto";
+    document.getElementById("ns").style.opacity = "1";
+  }
+}
   const [drawer, setDrawer] = React.useState(false)
     const [line, setLine] = useState(0)
   return (
-     <div style={{marginBottom:"3rem"}}>
-    <AppBar position="fixed" sx={{marginBottom:"2rem",mb:"50px"}}>
+     <div style={{marginBottom:"6rem"}}>
+    <AppBar  position="fixed" sx={{display:{xs:'none',sm:"block"},marginBottom:"2rem",mb:"50px"}}>
      
-      <Box sx={{display:{xs:'none',sm:"block",minHeight:"50px"}}}>
+      <Box sx={{display:{xs:'none',sm:"block"}}}>
       <Toolbar sx={{display: 'flex',minHeight:"50px", "&.MuiToolbar-root":{minHeight:"50px"}}}>
         <IconButton
           size="large"
@@ -168,18 +180,22 @@ const NavBar = () => {
               </Toolbar>
 
     </Box>
+    </AppBar>
+    <AppBar position="fixed" sx={{display:{xs:'block',sm:"none"},marginBottom:"2rem",mb:"50px"}}>
 
     <Box sx={{display:{xs:"block",sm:"none",minHeight:"50px"}}}>
-      <Toolbar sx={{display:"flex",justifyContent:"center",minHeight:"50px"}}>
-              <Button onClick={()=>{setDrawer(!drawer)}} sx={{ mr:"auto", color:"#fff",width:"50px" }} ><MenuRoundedIcon></MenuRoundedIcon></Button>
+      <div id="ns"  class="ns" style={{position:"relative",display:"flex",justifyContent:"center",flexFlow:"row-reverse"}}>
+              
+          <Button onClick={()=>{setDrawer(!drawer)}} sx={{ display:"inline-block",ml:"auto", color:"#fff",width:"50px" }} ><MenuRoundedIcon></MenuRoundedIcon></Button>
+              <div style={{display:"block",marginLeft:"10px",marginRight:"auto"}}>
               <Typography
             variant="h6"
             noWrap
             component="a"
             href="/Posts"
             sx={{
-              mr: "auto",
-              pr:"4rem",
+              
+              // pr:"4rem",
              alignSelf: 'center',
               fontFamily: 'monospace',
               fontWeight: 700,
@@ -190,6 +206,51 @@ const NavBar = () => {
           >
             {"<Hulk>"}
           </Typography>
+          </div>
+          </div>
+      <Toolbar sx={{display:"flex",justifyContent:"center",minHeight:"50px"}}>
+              <Tabs textColor="secondary" fontSize="small"   sx={{
+          marginLeft:"auto",
+          marginRight:"auto",
+          minWidth:"0px",
+    // "& button": { borderRadius: 4 },
+    // "& button:hover": { backgroundColor: "blue" },
+    // "& button:focus": { backgroundColor: "yellow" },
+    // "& button:active": { backgroundColor: "green" }
+  }} indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
+        <Tab sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===0? <Tooltip title="Home"><HomeIcon/></Tooltip> :< Tooltip title="Home"><HomeOutlinedIcon/></Tooltip>} to="/posts" component={Link}  >
+        
+          
+       
+        </Tab>
+        <Tab sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===1? <Tooltip title="New Post"><PostAddIcon></PostAddIcon></Tooltip>: <Tooltip title="New Post"><PostAddOutlinedIcon></PostAddOutlinedIcon></Tooltip>} to="/addposts" component={Link} >
+        
+        </Tab>
+        <Tab  sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===2? <Tooltip title="Profile"><PersonIcon/></Tooltip>:<Tooltip title="Profile"><PersonOutlineOutlinedIcon></PersonOutlineOutlinedIcon></Tooltip>} to="/myPosts" component={Link}  >
+        </Tab>
+        <Tab sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        //  "& :hover":{
+        //    backgroundColor:"#FFFFFF",
+        //  },
+        
+        color:"#FFFFFF"}}  icon={line===3? <Tooltip title="Add Friends"><PersonAddAlt1Icon/></Tooltip>:<Tooltip title="Add Friends"><PersonAddAltOutlinedIcon></PersonAddAltOutlinedIcon></Tooltip>}  component={Link} to="/addFriends" ><Button sx={{color:"#FFFFFF"}}>
+   
+          Add Friends
+        </Button>
+        </Tab>
+        </Tabs>
+                 
               </Toolbar>        
               <Drawer 
             anchor="left"

@@ -168,11 +168,11 @@ useEffect( ()=>{
         accept=".jpg,.png,.jpeg"
         onChange={pickedHandler}
       />
-    <div style={{display:"flex", maxWidth:"200px",maxHeight:"200px",}}>
+    <div style={{display:"flex",position:"relative", maxWidth:"200px",maxHeight:"200px",}}>
          {        
-         previewUrl? <img src={previewUrl} style={{maxWidth:"200px",maxHeight:"200px",minWidth:"200px",minHeight:"200px", borderRadius:"100px",borderColor:"#cde8cc",border:"2px solid #cde8cc",boxShadow:"1px 1px 5px 5px #cde8cc",objectFit:"cover"}} alt={"Image Not Found"} />:<img src={DefaultImg} style={{maxWidth:"200px",maxHeight:"200px",borderRadius:"100px",borderColor:"#cde8cc",border:"2px solid #cde8cc",boxShadow:"1px 1px 5px 5px #cde8cc"}} alt={"not found"}></img>
+         previewUrl? <img src={previewUrl} style={{dispaly:"block",maxWidth:"200px",maxHeight:"200px",minWidth:"200px",minHeight:"200px", borderRadius:"100px",borderColor:"#cde8cc",border:"2px solid #cde8cc",boxShadow:"1px 1px 5px 5px #cde8cc",objectFit:"cover"}} alt={"Image Not Found"} />:<img src={DefaultImg} style={{maxWidth:"200px",maxHeight:"200px",borderRadius:"100px",borderColor:"#cde8cc",border:"2px solid #cde8cc",boxShadow:"1px 1px 5px 5px #cde8cc"}} alt={"not found"}></img>
 }
-         <div style={{position:"absolute",bottom:"9.5rem",marginLeft:"auto",boxShadow:"1px 1px 5px 3px #cde8cc",borderRadius:"50px"}}>
+         <div style={{position:"absolute",bottom:"0.5rem",marginLeft:"auto",boxShadow:"1px 1px 5px 3px #cde8cc",borderRadius:"50px"}}>
            <IconButton color="primary" onClick={pickImageHandler}>
              <AddAPhotoRoundedIcon></AddAPhotoRoundedIcon>
            </IconButton>

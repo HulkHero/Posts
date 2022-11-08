@@ -88,7 +88,7 @@ const MyPosts = () => {
   return (
     <>
    
-    <Paper evaluation={2} style={{minWidth: "100%",display:"flex:",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100%",backgroundColor:"#cde8cc"}} spacing={2}>
+    <Paper evaluation={2} style={{minWidth: "100%",display:"flex:",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100%",backgroundColor:"whitesmoke"}} spacing={2}>
           
     {data && data.map((element)=>{
            const base64= btoa(new Uint8Array(element.image.data.data).reduce(function (data, byte) {
