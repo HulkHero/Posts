@@ -5,6 +5,8 @@ const mongoose = require("mongoose")
 var ObjectId = require('mongodb').ObjectId;
 const HttpError = require('./http-error');
 const Person = require('./models');
+const Profile = require('./ProfileModel');
+const fs= require('fs');
 
 
 const getUsers = async (req, res, next) => {
@@ -74,9 +76,25 @@ const signup = async (req, res, next) => {
   });
 
 //  try {
-    await createdUser.save();
+   await createdUser.save();
 
     console.log(createdUser);
+    console.log("error in profile")
+    var newp = await new Profile({
+      createrId:ObjectId(createdUser._id),
+      Status:"None",
+       imagename:"default",
+       avatar:{
+        data: fs.readFileSync('uploads/' + "default.jpg"),
+        contentType:"image/png"
+       }
+    })
+
+    await newp.save()
+    console.log("adding profile id",newp._id)
+     await Person.updateOne({_id:createdUser._id},{profile:
+     newp._id
+    }).exec()
  // } catch (err) {
   //  const error = new HttpError(
    //   'Signing up failed, please try again later.',

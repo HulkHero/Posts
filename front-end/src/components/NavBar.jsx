@@ -102,7 +102,7 @@ function scrollFunction() {
   const [drawer, setDrawer] = React.useState(false)
     const [line, setLine] = useState(0)
   return (
-     <div style={{marginBottom:"6rem"}}>
+     <Box sx={{marginBottom:{xs:"6rem",sm:"3rem"}}}>
     <AppBar  position="fixed" sx={{display:{xs:'none',sm:"block"},marginBottom:"2rem",mb:"50px"}}>
      
       <Box sx={{display:{xs:'none',sm:"block"}}}>
@@ -283,7 +283,7 @@ function scrollFunction() {
 
             
     </AppBar>
-    </div>
+    </Box>
  
  
 

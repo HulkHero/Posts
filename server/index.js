@@ -46,16 +46,6 @@ app.use((req, res, next) => {
     next();
   });
 
-  var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname )
-    }
-});
-  
-var upload = multer({ storage: storage });
 
 app.get('/myPosts/:id',auth,async(rek,res)=>{
   try{
@@ -248,12 +238,33 @@ res.end()
 
 // for streams set status to 206 partial data
 
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, 'uploads')
+  },
+  filename: (req, file, cb) => {
+      cb(null, file.originalname )
+  }
+});
 
+var upload = multer({ storage: storage });
+const uploadProfile = multer({
+  limits: {
+      fileSize: 10485760 //in bytes
+  },
+  fileFilter(req, file, cb) {
+      if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+          return cb(new Error('Only images allowed'))
+      }
+      cb(undefined, true)
+  }
+})
 
-app.post('/addStory',upload.single("image"),async(rek,res)=>{
+app.post('/addStory',uploadProfile.single("image"),async(rek,res)=>{
   console.log("entering stories") 
    heading=rek.body.heading;
    caption=rek.body.caption;
+   const buffer = await sharp(rek.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
    id=rek.body.id;
    creatername=rek.body.creatername;
    console.log("id",id)
@@ -266,7 +277,7 @@ app.post('/addStory',upload.single("image"),async(rek,res)=>{
     creatername:creatername,
     imagename:rek.file.filename,
     image: {
-      data: fs.readFileSync('uploads/' + rek.file.filename),
+      data: buffer,
       contentType: 'image/png'
   }                                // assign the _id from the person
  });
@@ -277,17 +288,7 @@ app.post('/addStory',upload.single("image"),async(rek,res)=>{
   
 })
 
-const uploadProfile = multer({
-  limits: {
-      fileSize: 10485760 //in bytes
-  },
-  fileFilter(req, file, cb) {
-      if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
-          return cb(new Error('Only images allowed'))
-      }
-      cb(undefined, true)
-  }
-})
+// data: fs.readFileSync('uploads/' + rek.file.filename),
 app.post('/avatar', uploadProfile.single('avatar'), async (rek, res) => {
   console.log("he")
   const buffer = await sharp(rek.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
