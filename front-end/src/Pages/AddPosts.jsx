@@ -144,7 +144,7 @@ const AddPosts = () => {
   }
   return (
     <div style={{backgroundColor:"#f0f2f5",minHeight:"90vh",display:"flex",justifyContent:"center"}}>
-    <Grid container   sx={{ maxWidth:"50%",  display: 'flex',justifyContent: 'center', mt:"20px",backgroundColor:"#ffffff",borderRadius:"40px"} }>
+    <Grid container   sx={{ maxWidth:{xs:"90%",sm:"45%"},maxHeight:"50vh", display: 'flex',justifyContent: 'center', mt:"20px",backgroundColor:"#ffffff",borderRadius:"40px"} }>
       <form onSubmit={(e)=>onSubmit(e)}>
       <Grid item xs={12} ><CssTextField type="heading" label="heading" value={user.heading} name="heading" id="outlined-basic"  onChange={(e)=>handleChange(e)}
       sx={{ ':hover':{

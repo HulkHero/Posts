@@ -128,10 +128,7 @@ function scrollFunction() {
         <Tabs textColor="secondary" fontSize="large"   sx={{
           marginLeft:"auto",
           marginRight:"auto",
-    "& button": { borderRadius: 4 },
-    "& button:hover": { backgroundColor: "blue" },
-    "& button:focus": { backgroundColor: "yellow" },
-    "& button:active": { backgroundColor: "green" }
+  
   }} indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
         <Tab sx={{'& .MuiSvgIcon-root':{
           fontSize:"xx large",
@@ -158,17 +155,7 @@ function scrollFunction() {
         //  "& :hover":{
         //    backgroundColor:"#FFFFFF",
         //  },
-        "&.MuiButtonBase-root":{
-          '& :hover':{
-            minWidth:"50px",
-            
-            padding:"0px",
-            margin:"0px",
-            backgroundColor:"#003767b3",
-            textColor:"#3767b3",
-              
-          },
-        },
+        
         color:"#FFFFFF"}}  icon={line===3? <Tooltip title="Add Friends"><PersonAddAlt1Icon/></Tooltip>:<Tooltip title="Add Friends"><PersonAddAltOutlinedIcon></PersonAddAltOutlinedIcon></Tooltip>}  component={Link} to="/addFriends" ><Button sx={{color:"#FFFFFF"}}>
    
           Add Friends
