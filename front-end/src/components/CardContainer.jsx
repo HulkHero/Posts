@@ -9,6 +9,10 @@ import NoteContext from '../context/noteContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CircularProgress from '@mui/material/CircularProgress'
 const CardContainer = () => {
+  useEffect(() => {
+    console.log(window.scrollY)
+ 
+   },[window.scrollY])
  // var data;
  const a= useContext(NoteContext)
  const [data,setData]=useState([])
@@ -30,6 +34,7 @@ const CardContainer = () => {
      a.setcreatername(getcreatername)
    }
  }
+ console.log(window)
    
   
     useEffect(() => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import {AppBar,Tabs,Tab,Box,Drawer,Grid,Typography, Tooltip} from '@mui/material'
 import {Link} from 'react-router-dom'
 import Toolbar from '@mui/material/Toolbar';
@@ -20,6 +20,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import InputBase from '@mui/material/InputBase';
 import "./nav.css"
 import SearchIcon from '@mui/icons-material/Search';
+import NoteContext from '../context/noteContext'
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius:"50px",
@@ -87,8 +88,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }
 }));
 const NavBar = () => {
-  window.onscroll = function() {scrollFunction()};
+  const a= useContext(NoteContext)
+  if (a.token)
+  {}
+  else{
+    const getToken=sessionStorage.getItem("token");
+   
+      const getid=sessionStorage.getItem("id");
+      const getcreatername=sessionStorage.getItem("creatername");
+    if(getToken!==null){
+      a.setToken(getToken)
+      a.setId(getid)
+      a.setcreatername(getcreatername)
+    }
+  }
 
+  window.onscroll = function() {scrollFunction()};
+  
+    
+ 
 function scrollFunction() {
   if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
     
@@ -102,8 +120,10 @@ function scrollFunction() {
   const [drawer, setDrawer] = React.useState(false)
     const [line, setLine] = useState(0)
   return (
+    
      <Box sx={{marginBottom:{xs:"6rem",sm:"3rem"}}}>
-    <AppBar  position="fixed" sx={{display:{xs:'none',sm:"block"},marginBottom:"2rem",mb:"50px"}}>
+      {a &&
+         <div> <AppBar  position="fixed" sx={{display:{xs:'none',sm:"block"},marginBottom:"2rem",mb:"50px"}}>
      
       <Box sx={{display:{xs:'none',sm:"block"}}}>
       <Toolbar sx={{display: 'flex',minHeight:"50px", "&.MuiToolbar-root":{minHeight:"50px"}}}>
@@ -270,7 +290,10 @@ function scrollFunction() {
 
             
     </AppBar>
+    </div>
+      }
     </Box>
+    
  
  
 

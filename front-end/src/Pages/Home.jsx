@@ -1,10 +1,12 @@
 import { Grid,Box, } from '@mui/material'
-import React from 'react'
+import React,{useEffect} from 'react'
 import CardContainer from '../components/CardContainer'
 import AlignItemsList from '../components/friends'
 import NavBar from '../components/NavBar'
 
 const Home = () => {
+  
+ 
   return (
     <>
     
