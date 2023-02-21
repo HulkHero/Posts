@@ -17,7 +17,7 @@ const CssTextField = styled(TextField)({
    "& .MuiInputBase-input":{
     color:"black",
   
-    minWidth:"250px",
+    minWidth:"150px",
 
    },
 
@@ -72,7 +72,7 @@ const MyProfile = () => {
 
 useEffect( ()=>{
    
-  Axios.get(`http://localhost:5000/getProfile/${a.id}`).then((response)=>{
+  Axios.get(`https://nice-plum-panda-tam.cyclic.app/getProfile/${a.id}`).then((response)=>{
     setData(response.data);
     console.log("got proile",response.data);
     
@@ -125,13 +125,13 @@ useEffect( ()=>{
     
     if(a.token){
       console.log("sent")
-      Axios.post("http://localhost:5000/avatar",formData,{headers:{'content-type': 'multipart/form-data'}}).then((response)=>{
+      Axios.post("https://nice-plum-panda-tam.cyclic.app/avatar",formData,{headers:{'content-type': 'multipart/form-data'}}).then((response)=>{
         console.log(response)
         setOpenSnack(true)   
        })
   
   
-    }
+      }
     else{
       console.log("login first")
     }  }

@@ -15,7 +15,7 @@ const bodyParser = require("body-parser");
 const fs = require('fs');
 const cookieParser = require("cookie-parser");
 const { auth } = require("./auth");
-const { JsonStreamStringify } = require("json-stream-stringify");
+
 require('dotenv').config();
 const app = express();
 MongoClient = require('mongodb').MongoClient;
@@ -29,8 +29,8 @@ app.use(express.urlencoded({
 app.use(bodyParser.json());
 
 app.use(cors());
-console.log("env", process.env.MONGODB_URL)
-mongoose.connect(process.env.MONGODB_URL).then((err, res) => console.log(err));
+// console.log("env", process.env.MONGODB_URL)
+mongoose.connect("mongodb+srv://Hulk:Hulk%401322@cluster0.cmdv1.mongodb.net/hulk2?retryWrites=true&w=majority").then((err, res) => console.log(err));
 
 app.use(cookieParser());
 
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/myPosts/:id', auth, async (rek, res) => {
+app.get('/myPosts/:id', async (rek, res) => {
   try {
     id = rek.params.id
     console.log("id: ", id)
@@ -136,16 +136,17 @@ app.get("/data", auth, async (req, res) => {
 
 // stories an user 
 app.get("/", async (req, res) => {
-
+  // res.send("hello")
   const person = await Person.find({}, { email: 1 })
   //const user= await Person.find({},{name:1}).populate('Posts')
 
-  const posts = await Story.find().sort({ _id: -1 })
+  // const posts = await Story.find().sort({ _id: -1 })
   //const user=await Story.find({}).populate('creater')
   //console.log(user.creater[0].name)
-  res.send(
-    posts)
-  res.end()
+  res.send(person)
+  // res.send(
+  //   posts)
+  // res.end()
   // await Story.find({}, (err, result) => {
   //   if (err) {
   // res.json("error")
@@ -163,24 +164,35 @@ app.get("/", async (req, res) => {
 
 
 // using at home page
+// console.log(rek.userData, "userData")
+//auth,
 app.get("/batchData/:skip/:limit", async (rek, res) => {
+
   try {
 
 
     var skip = rek.params.skip;
     var limit = rek.params.limit;
     console.log(skip, limit)
-    await Story.find().sort({ _id: -1 }).skip(skip).limit(2).then((result) => {
+    await Story.find().sort({ _id: -1 }).skip(skip).limit(limit).populate({ path: "creater", select: "profile", populate: { path: "profile", select: "avatar" } }).then((result) => {
       if (result.length > 0) {
-
         res.send(result)
       }
       else {
         res.status(300).send("not found")
       }
     })
+    // await Story.find().sort({ _id: -1 }).skip(skip).limit(limit).then((result) => {
+    //   if (result.length > 0) {
+    //     res.send(result)
+    //   }
+    //   else {
+    //     res.status(300).send("not found")
+    //   }
+    // })
   }
   catch (error) {
+    console.log(error, "err")
     res.send(error)
   }
 })
@@ -263,7 +275,7 @@ app.post('/addStory', uploadProfile.single("image"), async (rek, res) => {
   console.log("entering stories")
   heading = rek.body.heading;
   caption = rek.body.caption;
-  const buffer = await sharp(rek.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
+  const buffer = await sharp(rek.file.buffer).resize({ width: 400, height: 250 }).png().toBuffer()
   id = rek.body.id;
   creatername = rek.body.creatername;
   console.log("id", id)
@@ -308,6 +320,7 @@ app.post('/avatar', uploadProfile.single('avatar'), async (rek, res) => {
         }
       })
       console.log(docs); // print out what it sends back
+      res.send("saved")
     }
     else // if it does not 
     {
@@ -569,13 +582,47 @@ app.put("/acceptRekuest", async (rek, res) => {
 
 })
 
+
+app.get("/myFriends/:userId", async (rek, res) => {
+
+  try {
+    var userId = rek.params.userId;
+    console.log("userId: ", userId);
+    // res.send(user);
+    console.log(typeof userId)
+  }
+  catch (err) {
+    res.send(err)
+  }
+  try {
+    const user = await Friends.findOne({ createrId: userId }, { friends: 1 })
+    // console.log("friends", user.friends);
+    let friendsId = [];
+    user.friends.forEach((friend) => {
+      friendsId.push(friend.toString());
+    })
+    Profile.find({ createrId: { $in: friendsId } }).populate("createrId", "name").select({ "Status": 1, "avatar": 1, "createrId": 1 }).exec((err, docs) => {
+      if (err) {
+        console.log("err,inside ")
+        res.send("error")
+      }
+
+      console.log("docs")
+      res.send(docs)
+    })
+  }
+  catch (err) {
+    console.log("not found")
+    res.send("error2")
+  }
+
+
+})
+
 app.get("/showFriends/:userId", async (rek, res) => {
   try {
     var userId = rek.params.userId;
-
-
     // res.send(user);
-
   }
   catch (err) {
     res.send(err)
@@ -703,7 +750,7 @@ app.get("/getStatus/:id/:friendId", async (rek, res) => {
 
 
 
-app.listen(5000, (rek, res) => {
+app.listen(process.env.PORT || 5000, (rek, res) => {
   console.log("server is up")
 })
 

@@ -21,7 +21,7 @@ const RecievedFriends = () => {
 
     
    useEffect(() => {
-     Axios.get(`http://localhost:5000/showRekuests/${a.id}`).then(response => {
+     Axios.get(`https://nice-plum-panda-tam.cyclic.app/showRekuests/${a.id}`).then(response => {
 
      console.log("showRekuests", response);
       setData(response.data.rekuestRecieved);
@@ -30,7 +30,7 @@ const RecievedFriends = () => {
    },[ ])
 
    const AcceptRekuest=(targetId)=>{
-       Axios.put("http://localhost:5000/acceptRekuest",{senderId: a.id, targetId: targetId}).then(response => {
+       Axios.put("https://nice-plum-panda-tam.cyclic.app/acceptRekuest",{senderId: a.id, targetId: targetId}).then(response => {
           console.log(response);
           setData(Data && Data.map((item)=>{
                return item._id!=targetId;
@@ -48,10 +48,10 @@ const RecievedFriends = () => {
   return (
     <> 
 
-    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' ,marginLeft:"auto",marginRight:"auto"}}>
      <ListItem> <div>
         <Typography component="h5" variant='h5' >
-            Rekuests
+        Requests
         </Typography>
     </div>
     </ListItem>
@@ -77,8 +77,6 @@ const RecievedFriends = () => {
                     <Icon>
                       <AddCircleOutlineRoundedIcon></AddCircleOutlineRoundedIcon>
                     </Icon>
-                    
-
                </IconButton>
 
               </ListItem>

@@ -6,7 +6,16 @@ const theme=createTheme({
         primary:{
           main:'#0097a7'
         }
-    }
+    },
+    components: {
+      // Changing default props
+      MuiCardActionArea: {  //name of the component
+        defaultProps: {
+          // Name of the property
+          disableRipple:true
+        },
+      },
+    },
 
 })
 

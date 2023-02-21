@@ -21,6 +21,19 @@ import InputBase from '@mui/material/InputBase';
 import "./nav.css"
 import SearchIcon from '@mui/icons-material/Search';
 import NoteContext from '../context/noteContext'
+
+const Head=styled("Box")(({theme})=>({
+ // position:"relative",
+  //height:"auto",
+  opacity:1,
+  display:"flex",
+  justifyContent:"center",
+  flexFlow:"row-reverse",
+  //top:"0px",
+  transition:"height 0.5s"
+  
+
+}))
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius:"50px",
@@ -111,10 +124,10 @@ function scrollFunction() {
   if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
     
     document.getElementById("ns").style.height = "0px";
-    document.getElementById("ns").style.opacity = "0";
+     document.getElementById("ns").style.opacity = "0";
   } else {
     document.getElementById("ns").style.height = "auto";
-    document.getElementById("ns").style.opacity = "1";
+     document.getElementById("ns").style.opacity = "1";
   }
 }
   const [drawer, setDrawer] = React.useState(false)
@@ -145,10 +158,51 @@ function scrollFunction() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-        <Tabs textColor="secondary" fontSize="large"   sx={{
+        {/* <Tabs textColor="secondary" fontSize="small"   sx={{
           marginLeft:"auto",
           marginRight:"auto",
   
+  }} indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
+        <Tab value="one" sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===0? <Tooltip title="Home"><HomeIcon/></Tooltip> :< Tooltip title="Home"><HomeOutlinedIcon/></Tooltip>} to="/posts" component={Link}  >
+        
+          
+       
+        </Tab>
+        <Tab value="two" sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===1? <Tooltip title="New Post"><PostAddIcon></PostAddIcon></Tooltip>: <Tooltip title="New Post"><PostAddOutlinedIcon></PostAddOutlinedIcon></Tooltip>} to="/addposts" component={Link} >
+        
+        </Tab>
+        <Tab value="three" sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        color:"#FFFFFF"}} icon={line===2? <Tooltip title="Profile"><PersonIcon/></Tooltip>:<Tooltip title="Profile"><PersonOutlineOutlinedIcon></PersonOutlineOutlinedIcon></Tooltip>} to="/myPosts" component={Link}  >
+        </Tab>
+        <Tab value="four" sx={{'& .MuiSvgIcon-root':{
+          fontSize:"xx large",
+        },
+        //  "& :hover":{
+        //    backgroundColor:"#FFFFFF",
+        //  },
+        
+        color:"#FFFFFF"}}  icon={line===3? <Tooltip title="Add Friends"><PersonAddAlt1Icon/></Tooltip>:<Tooltip title="Add Friends"><PersonAddAltOutlinedIcon></PersonAddAltOutlinedIcon></Tooltip>}  component={Link} to="/addFriends" ><Button sx={{color:"#FFFFFF"}}>
+   
+          Add Friends
+        </Button>
+        </Tab>
+        </Tabs> */}
+        <Tabs textColor="secondary" fontSize="small"   sx={{
+          marginLeft:"auto",
+          marginRight:"auto",
+          minWidth:"0px",
+    // "& button": { borderRadius: 4 },
+    // "& button:hover": { backgroundColor: "blue" },
+    // "& button:focus": { backgroundColor: "yellow" },
+    // "& button:active": { backgroundColor: "green" }
   }} indicatorColor="secondary" value={line} onChange={(e,value)=>{ setLine(value)}}>
         <Tab sx={{'& .MuiSvgIcon-root':{
           fontSize:"xx large",
@@ -183,7 +237,8 @@ function scrollFunction() {
         </Tab>
         </Tabs>
        
-    <Button  sx={{ml:'auto',color:"#FFFFFF"}}><Link to="/" style={{textDecoration:"none",color:"#FFFFFF"}} >Login </Link> </Button>
+    <Button sx={{ml:'auto',textColor:"#FFFFFF",color:"#FFFFFF",textAlign:"center"}} minWidth href="https://drive.google.com/file/d/1rVfqyZF8uD5zAJhOcd0YqwRak_PISEfj/view?usp=sharing" target={" "} >APK</Button>
+    <Button  sx={{color:"#FFFFFF"}}><Link to="/" style={{textDecoration:"none",color:"#FFFFFF"}} >Login </Link> </Button>
               </Toolbar>
 
     </Box>
@@ -191,7 +246,7 @@ function scrollFunction() {
     <AppBar position="fixed" sx={{display:{xs:'block',sm:"none"},marginBottom:"2rem",mb:"50px"}}>
 
     <Box sx={{display:{xs:"block",sm:"none",minHeight:"50px"}}}>
-      <div id="ns"  class="ns" style={{position:"relative",display:"flex",justifyContent:"center",flexFlow:"row-reverse"}}>
+      <Head id="ns"  class="ns">
               
           <Button onClick={()=>{setDrawer(!drawer)}} sx={{ display:"inline-block",ml:"auto", color:"#fff",width:"50px" }} ><MenuRoundedIcon></MenuRoundedIcon></Button>
               <div style={{display:"block",marginLeft:"10px",marginRight:"auto"}}>
@@ -214,7 +269,7 @@ function scrollFunction() {
             {"<Hulk>"}
           </Typography>
           </div>
-          </div>
+          </Head>
       <Toolbar sx={{display:"flex",justifyContent:"center",minHeight:"50px"}}>
               <Tabs textColor="secondary" fontSize="small"   sx={{
           marginLeft:"auto",
@@ -275,6 +330,7 @@ function scrollFunction() {
                <Link style={{textDecoration:'none'}}  to="/addposts"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Add Post</Button></Link>
                <Link style={{textDecoration:'none'}}  to="/addFriends"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Add Friends</Button></Link>
 
+            <Button sx={{textColor:"#FFFFFF",color:"#FFFFFF",textAlign:"center"}} minWidth href="https://drive.google.com/file/d/1rVfqyZF8uD5zAJhOcd0YqwRak_PISEfj/view?usp=sharing" target={" "} >APK</Button>
             </Grid>
             
           </Drawer>

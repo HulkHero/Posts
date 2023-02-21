@@ -28,7 +28,7 @@ const AddFriends = () => {
   //  },[ ])
 
    const SendRekuest= async(targetId)=>{
-      await Axios.post("http://localhost:5000/sendRekuest",{senderId: a.id, targetId: targetId}).then(response => {
+      await Axios.post("https://nice-plum-panda-tam.cyclic.app/sendRekuest",{senderId: a.id, targetId: targetId}).then(response => {
          
        })
 
@@ -37,7 +37,7 @@ const AddFriends = () => {
    const handleSubmit = (event) => {
       event.preventDefault();
       const Data= new FormData(event.currentTarget)
-      Axios.get(`http://localhost:5000/showAddFriends/${Data.get("search")}`).then((response) => {console.log(response)
+      Axios.get(`https://nice-plum-panda-tam.cyclic.app/showAddFriends/${Data.get("search")}`).then((response) => {console.log(response)
             setData(response.data)})
 
    }
@@ -47,10 +47,10 @@ console.log("data",Data)
   return (
     <> 
 
-    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' ,marginLeft:"auto",marginRight:"auto"}}>
      <ListItem> <div>
         <Typography component="h5" variant='h5' sx={{mb:"5px"}}>
-            Send Rekuests
+            Send Requests
         </Typography>
         <Box component="form" onSubmit={handleSubmit} >
 

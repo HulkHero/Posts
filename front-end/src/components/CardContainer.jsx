@@ -1,5 +1,5 @@
 import React from 'react'
-import {Paper,Button,Box} from "@mui/material"
+import {Paper,Button,Box, Skeleton, Card, CardHeader, CardMedia} from "@mui/material"
 import { useState ,useEffect} from 'react'
 import Cards from './Cards';
 import Axios from "axios";
@@ -19,6 +19,7 @@ const CardContainer = () => {
  const [lik,setLik]=useState()
  const [skip,setSkip]=useState(0)
  const [hasMore,setHasMore]=useState(true)
+ console.log("data render",data)
 // var skip=0;
  var limit=2;
  if (a.token)
@@ -38,22 +39,32 @@ const CardContainer = () => {
    
   
     useEffect(() => {
-      Axios.get(`http://localhost:5000/batchData/${skip}/${limit}`).then((response)=>{
-       console.log("response")
-      
-        console.log("response",response)
-         setSkip(2)
-        setData(response.data)
-     
+      if(data.length>0){
 
-    })
+      }
+      else{
+
+        Axios.get(`https://nice-plum-panda-tam.cyclic.app/batchData/${skip}/${limit}`,{
+          headers:{
+            authorization : a.token,
+          }
+        }).then((response)=>{
+          console.log("response")
+          
+          console.log("response",response)
+          setSkip(2)
+          setData(response.data)
+          
+          
+        })
+      }
       
 
-    },[a.id])
+    },[])
 
     const onlike=(id)=>{
       if (a.id){
-        Axios.put(`http://localhost:5000/likePost/${id}/${a.id}`).then((response) => {
+        Axios.put(`https://nice-plum-panda-tam.cyclic.app/likePost/${id}/${a.id}`).then((response) => {
          
           console.log("response:dislike", response)
           setLik(response.data.likes.length);
@@ -68,18 +79,9 @@ const CardContainer = () => {
     }
     const ondislike=(id)=>{
       
-      Axios.put(`http://localhost:5000/dislikePost/${id}/${a.id}`).then((response) => {
+      Axios.put(`https://nice-plum-panda-tam.cyclic.app/dislikePost/${id}/${a.id}`).then((response) => {
         setLik(response.data.likes.length);
            
-        // setData(data.map((val)=>{
-         
-        //   if (val.likes.length>=0 && data.length>0)
-        //   {
-        //   return(
-        //     val._id==id && val.likes?  val.likes=val.likes.filter(item=>item !==  a.id): val
-        //   )}
-        // }))
-        
      
       })
 
@@ -95,7 +97,7 @@ const CardContainer = () => {
     
     console.log("skip",skip)
     console.log("limit",limit)
-    await Axios.get(`http://localhost:5000/batchData/${skip}/${limit}`).then((response)=>{
+    await Axios.get(`https://nice-plum-panda-tam.cyclic.app/batchData/${skip}/${limit}`).then((response)=>{
        
       
         console.log("response",response)
@@ -117,6 +119,7 @@ const CardContainer = () => {
     <>
    {
     <Paper evaluation={0} sx={{minWidth: "100%",display:"flex:",flexDirection:"column",alignItems:"center",border:"0px",boxShadow:"none",justifyContent:"center",minHeight:"100%",backgroundColor:"#f0f2f5"}} spacing={2}>
+    { data.length > 0 ? 
     <InfiniteScroll
      dataLength={data.length}
      next={fetchMoreData}
@@ -140,11 +143,19 @@ const CardContainer = () => {
             return data + String.fromCharCode(byte);
         }, ''));
        
-        const img=`data:image/png;base64,${base64}`
+        const img=`data:image/png;base64,${base64}`;
+
+        const base641= btoa(new Uint8Array(element.creater.profile.avatar.data.data).reduce(function (data, byte) {
+          return data + String.fromCharCode(byte);
+      }, ''));
+     
+      const imgAvatar=`data:image/png;base64,${base641}`
+
+
        return (
         <>
         <div style={{display: 'flex',flexDirection: 'column',alignItems:"center"}}>
-         <Cards key={element._id} ondislike={ondislike} userId={a.id} likes={element.likes} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onlike={onlike} displayLike={lik} isMyPosts={false}></Cards>
+         <Cards key={element._id} imgAvatar={imgAvatar} ondislike={ondislike} userId={a.id} likes={element.likes} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onlike={onlike} displayLike={lik} isMyPosts={false}></Cards>
         </div>
         </>
       )
@@ -152,6 +163,33 @@ const CardContainer = () => {
     })}
 
 </InfiniteScroll>
+   : <div style={{display:"flex",alignSelf:"center",flexDirection:"column",alignItems:"center"}}> <Card elevation={3} sx={{  maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
+    <CardHeader avatar={<Skeleton variant="circular" animation="wave" width={70} height={70}></Skeleton>} 
+     title={<Skeleton  sx={{borderRadius:0}} animation="wave" ></Skeleton>} subheader={<Skeleton variant='rectangular' animation="wave"></Skeleton>} > 
+     </CardHeader>
+     <Skeleton variant="rectangular" animation="wave" sx={{ml:"10px",mr:"10px"}}></Skeleton>
+    
+      <Skeleton variant="rectangular" animation="wave" sx={{minHeight:"200px",minWidth:"250px",maxHeight:"300px",maxWidth:"100%",mt:2,position:"center",justifyContent:"center",objectFit:"scale-down"}}></Skeleton>
+
+    
+      
+    {/* <Skeleton >
+    </Skeleton> */}
+    </Card>
+    <Card elevation={3} sx={{  maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
+    <CardHeader avatar={<Skeleton variant="circular" animation="wave" width={70} height={70}></Skeleton>} 
+     title={<Skeleton  sx={{borderRadius:0}} animation="wave" ></Skeleton>} subheader={<Skeleton variant='rectangular' animation="wave"></Skeleton>} > 
+     </CardHeader>
+     <Skeleton variant="rectangular" animation="wave" sx={{ml:"10px",mr:"10px"}}></Skeleton>
+    
+      <Skeleton variant="rectangular" animation="wave" sx={{minHeight:"200px",minWidth:"250px",maxHeight:"300px",maxWidth:"100%",mt:2,position:"center",justifyContent:"center",objectFit:"scale-down"}}></Skeleton>
+
+    
+      
+    {/* <Skeleton >
+    </Skeleton> */}
+    </Card> 
+    </div>}
     </Paper>
 }
     </>
