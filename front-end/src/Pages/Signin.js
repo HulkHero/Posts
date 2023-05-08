@@ -4,8 +4,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { Link } from "react-router-dom"
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -22,8 +20,7 @@ import { Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTheme } from '@mui/system';
-// const theme = createTheme();
-import { green } from '@mui/material/colors';
+
 function setSessionToken(userToken, id, names) {
   sessionStorage.setItem('token', userToken);
   sessionStorage.setItem('id', id);
@@ -56,12 +53,12 @@ export default function SignIn() {
       a.setId(response.data.userId)
       console.log(response.token)
       a.setcreatername(response.data.name)
-      setOpenSnack(true)
+
       setSessionToken(response.data.token, response.data.userId, response.data.name)
       setLoading(false)
       Navigate("/posts")
 
-    }).catch((error) => { console.log(error); setLoading(false) });
+    }).catch((error) => { console.log(error); setLoading(false); setOpenSnack(true) });
   };
 
 
@@ -82,12 +79,12 @@ export default function SignIn() {
       a.setId(response.data.userId)
       console.log(response.token)
       a.setcreatername(response.data.name)
-      setOpenSnack(true)
+
       setSessionToken(response.data.token, response.data.userId, response.data.name)
       setLoading(false)
       Navigate("/posts")
 
-    }).catch((error) => { console.log(error); setLoading(false) });
+    }).catch((error) => { console.log(error); setLoading(false); setOpenSnack(true) });
   };
 
   return (
@@ -122,8 +119,8 @@ export default function SignIn() {
         }}
       >
         <Snackbar open={openSnack} autoHideDuration={4000} onClose={() => setOpenSnack(false)}>
-          <Alert onClose={() => { setOpenSnack(false) }} severity="success" variant="filled" sx={{ width: '100%' }}>
-            Logged in successfully
+          <Alert onClose={() => { setOpenSnack(false) }} severity="error" variant="filled" sx={{ width: '100%' }}>
+            Login failed
           </Alert>
         </Snackbar>
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -153,10 +150,6 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Box sx={{ m: 1, position: 'relative' }}>
             <Button
               type="submit"
@@ -175,7 +168,7 @@ export default function SignIn() {
                   position: 'absolute',
                   top: '50%',
                   left: '50%',
-                  marginTop: '-12px',
+                  marginTop: '-10px',
                   marginLeft: '-12px',
                 }}
               />
