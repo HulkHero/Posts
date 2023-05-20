@@ -33,9 +33,9 @@ export default function SignIn() {
   const theme = useTheme()
   const a = useContext(NoteContext)
   const Navigate = useNavigate();
-  const [open, setOpen] = useState(false)
+
   const [openSnack, setOpenSnack] = useState(false)
-  const [show, setSignup] = useState(false)
+
   const [loading, setLoading] = useState(false)
   const handleSubmit = (event) => {
     setLoading(true)
@@ -47,14 +47,13 @@ export default function SignIn() {
       password: data.get('password')
 
     }).then((response) => {
-      console.log(response)
-      console.log(response.data.token)
+
       console.log("id ", response.data.userId)
       a.setToken(response.token)
       a.setId(response.data.userId)
       console.log(response.token)
       a.setcreatername(response.data.name)
-      const ava = response.data.avatar.avatar;
+      const ava = response.data.avatar;
       const base64 = btoa(
         new Uint8Array(ava.data.data).reduce(function (data, byte) {
           return data + String.fromCharCode(byte);
@@ -88,7 +87,7 @@ export default function SignIn() {
       a.setId(response.data.userId)
 
       a.setcreatername(response.data.name)
-      const ava = response.data.avatar.avatar;
+      const ava = response.data.avatar;
       const base64 = btoa(
         new Uint8Array(ava.data.data).reduce(function (data, byte) {
           return data + String.fromCharCode(byte);
@@ -109,25 +108,6 @@ export default function SignIn() {
 
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      {/* <Button onClick={() => setOpen(true)}>Open</Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box position="absolute" top="40%" left="40%" backgroundColor="blue" padding="10px">
-          <Typography id="modal-modal-title" variant="h6" color="white" component="h2">
-            Logged in
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal> */}
-
-
-      {show == true ? <Outlet></Outlet> : " "}
       <Box
         sx={{
           marginTop: 8,
@@ -168,7 +148,7 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
           />
-          <Link onClick={() => setSignup(!show)} sx={{ textDecoration: 'none !important', textDecorationLine: "none" }} to='/signup'>Signup</Link>
+          <Link sx={{ textDecoration: 'none !important', textDecorationLine: "none" }} to='/signup'>Signup</Link>
           <Box sx={{ m: 1, position: 'relative' }}>
             <Button
               type="submit"
