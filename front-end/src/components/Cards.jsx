@@ -6,11 +6,12 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useContext } from 'react';
-
+import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import NoteContext from '../context/noteContext';
 import {useState,useEffect} from "react"
 
 import "./fri.css"
+import CommentsModal from './Comments/CommentsModal';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -49,7 +50,6 @@ const LikeIcon=styled(FavoriteIcon)(({ theme })=>({
 
 const Cards = (props) => {  
   const a= useContext(NoteContext)
-    console.log("a.id",a.id)
   const [like, setLike] = useState(false)
   const [modal, setModal] = useState(false)
   const [num, setnum] = useState(props.likes.length)
@@ -69,6 +69,15 @@ var result = date.toLocaleDateString('en', options);
     }
       
   }, [])
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   // useEffect(() => {
   //   Axios.get(`http://localhost:5000/likes/${props.id}/${a.id}`).then((response)=>{
@@ -82,8 +91,11 @@ var result = date.toLocaleDateString('en', options);
   
 
   return (
-    <Card elevation={3} sx={{  maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
+    <Card elevation={3} sx={{ alignSelf:"center",mr:"auto",ml:"auto", maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
       <CardHeader
+             sx={{":hover":{
+              cursor:"default"
+             }}}
         avatar={
           <Avatar  sx={{width:"50px",height:"50px" ,bgcolor: red[500] }} alt={props.name[0]} src={props.imgAvatar}>
            
@@ -137,19 +149,25 @@ var result = date.toLocaleDateString('en', options);
         </Typography>
       </CardContent>
       <CardActions >
-        <IconButton disableRipple={true} onClick={()=>{ if(like==true){props.ondislike(props.id);setnum(props.likes.length--);
+        <IconButton disableRipple={true} onClick={()=>{ if(like==true){props.ondislike(props.id,props.index);
+        // setnum(props.likes.length--);
         setLike(false)
-        setAnimate(false)
        }else{
-          props.onlike(props.id);
+          props.onlike(props.id,props.index);
           setLike(true)
-          setAnimate(true)
-          setnum(props.likes.length++)
+          // setnum(props.likes.length++)
         }}} >
          {  like==true? <LikeIcon className={animate==true?"likeIconAnimation":" "}  />  :<FavoriteBorderIcon></FavoriteBorderIcon>    
          }
         </IconButton>
         <Typography variant="body1" color="text.primary" sx={{alignSelf:"center"}}>{props.displayLikes? props.displayLikes :props.likes.length}</Typography>
+        <Box sx={{ml:"auto", display:"flex",justifyContent:"center",alignItems:"center"}} >
+        <IconButton onClick={handleClickOpen}>
+           <CommentRoundedIcon/>
+        </IconButton>
+         <Typography variant="body2" color="text.primary" sx={{alignSelf:"center"}}>{`comments`}</Typography>
+        </Box>
+        <CommentsModal userId={props.userId} postId={props.id} open={open} handleClickOpen={handleClickOpen} handleClose={handleClose} ></CommentsModal>
         </CardActions>
         </Card>
         

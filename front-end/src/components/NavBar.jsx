@@ -102,25 +102,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 const NavBar = () => {
   const a= useContext(NoteContext)
-  if (a.token)
-  {}
-  else{
-    const getToken=sessionStorage.getItem("token");
+  // if (a.token)
+  // {}
+  // else{
+  //   const getToken=sessionStorage.getItem("token");
    
-      const getid=sessionStorage.getItem("id");
-      const getcreatername=sessionStorage.getItem("creatername");
-      const avatar=sessionStorage.getItem("avatar");
-    if(getToken!==null){
-      a.setToken(getToken)
-      a.setId(getid)
-      a.setcreatername(getcreatername)
-      a.setavatar(avatar);
-    }
-  }
+  //     const getid=sessionStorage.getItem("id");
+  //     const getcreatername=sessionStorage.getItem("creatername");
+  //     const avatar=sessionStorage.getItem("avatar");
+  //   if(getToken!==null){
+  //     a.setToken(getToken)
+  //     a.setId(getid)
+  //     a.setcreatername(getcreatername)
+  //     a.setavatar(avatar);
+  //   }
+  // }
 
 
   window.onscroll = function() {scrollFunction()};
-  console.log("a.avatar",a.avatar)
+
   
 
   
@@ -197,9 +197,6 @@ function scrollFunction() {
           fontSize:"xx large",
         },
         color:"#FFFFFF"}} icon={line===0? <Tooltip title="Home"><HomeIcon/></Tooltip> :< Tooltip title="Home"><HomeOutlinedIcon/></Tooltip>} to="/posts" component={Link}  >
-        
-          
-       
         </Tab>
         <Tab sx={{'& .MuiSvgIcon-root':{
           fontSize:"xx large",
@@ -354,7 +351,6 @@ function scrollFunction() {
                <Link style={{textDecoration:'none'}}  to="/myPosts"> <Button onClick={()=>setDrawer(false)} sx={{ color:"#fff" }}>{"My Posts  " }  </Button></Link>
                <Link style={{textDecoration:'none'}}  to="/addposts"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Add Post</Button></Link>
                <Link style={{textDecoration:'none'}}  to="/addFriends"> <Button onClick={()=>setDrawer(false)}  sx={{ color:"#fff" }}>Add Friends</Button></Link>
-
              <a style={{paddingLeft:"0px"}}> <Button sx={{textColor:"#FFFFFF",color:"#FFFFFF",textAlign:"left",paddingLeft:"0px"}} href="https://drive.google.com/file/d/1rVfqyZF8uD5zAJhOcd0YqwRak_PISEfj/view?usp=sharing" target={" "} >APK</Button></a>
             <Button sx={{textColor:"#FFFFFF",color:"#FFFFFF",textAlign:"left"}}  minWidth href="https://drive.google.com/file/d/1698nyqMNmiHEuP1_5crfDfzbjpl_DJZB/view?usp=sharing" target={" "} >Other Projects</Button>
             </Grid>

@@ -9,9 +9,10 @@ import NoteContext from '../context/noteContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CircularProgress from '@mui/material/CircularProgress'
 import { useDispatch,useSelector } from 'react-redux';
-import { addData ,concatData, like,dislike,fetchMoreData,setSkip, RefreshAllData, fetchFirstData,setsavedScroll} from '../store';
+import { addData ,concatData, like,dislike,fetchMoreData,setSkip} from '../store';
 import {store} from "../store";
-
+import { VariableSizeList } from 'react-window';
+import CardSkeleton from './Skeleton';
 const CardContainer = () => {
 
  // var data;
@@ -38,7 +39,6 @@ const CardContainer = () => {
  }
 
  const dataRedux=useSelector((state)=> state.data.value )
- const firstfetch=useSelector((state)=> state.data.firstFetch )
  const skip=useSelector((state)=> state.data.skip )
    
   
@@ -53,13 +53,19 @@ const CardContainer = () => {
             authorization : a.token,
           }
         }).then((response)=>{
+          console.log("response")
+          
+          console.log("response",response)
           dispatch(setSkip())
          // setData(response.data)
-         dispatch(fetchFirstData)
           dispatch(addData(response.data))  
+          
+          
         })
       }
-    },[skip])
+      
+
+    },[])
 
     const onlike=(id,key)=>{
       if (a.id){
@@ -101,11 +107,16 @@ const CardContainer = () => {
     
     console.log("skip",skip)
     console.log("limit",limit)
-    await Axios.get(`https://nice-plum-panda-tam.cyclic.app/batchData/${skip}/${limit}`).then((response)=>{
+    await Axios.get(`https://nice-plum-panda-tam.cyclic.app/batchData/${skip}/${1}`).then((response)=>{
+       
+
+      
         console.log("response",response)
          dispatch(setSkip())
         dispatch(concatData(response.data))
-     
+       // setData(data.concat(response.data))
+      
+
     }).catch(response=>{
       console.log("response error",response)
       if (response.response.status ==300){
@@ -115,13 +126,68 @@ const CardContainer = () => {
       }
     })}
    }
-
-    const RefreshData=async()=>{
-      dispatch(RefreshAllData())
+   const isItemLoaded = (index) => {
+    // Check if the item at the given index is loaded
+    const item = dataRedux[index];
+    return !!item; // Return true if item exists, false otherwise
+  };
+    const getItemSize = (index) => {
+    // Get the height of the item at the given index
+    const item = dataRedux[index];
+    if (item && item.image && item.image.data) {
+      return 500; // Item with image
+    } else if (item){
+      return 250; // Item without image
     }
-    
-   
+    else{
+        return 500;
+    }
+  };
+    const itemCount = more?dataRedux.length+1:dataRedux.length;
 
+   const Item = ({ index, style }) => {
+    const item= dataRedux[index];
+
+     console.log("index",index)
+     console.log("style",style)
+     if (!item) {
+       // If the item isn't loaded, display a loading placeholder
+       return(
+        <div style={style} >
+         <CardSkeleton></CardSkeleton>
+         </div>
+       )
+     }
+   let base64 = null;
+          let img=null;
+          if (item.image.data) {
+            base64 = btoa(
+              new Uint8Array(item.image.data.data).reduce(function (data, byte) {
+                return data + String.fromCharCode(byte);
+              }, '')
+            );
+           img=`data:image/png;base64,${base64}`;
+          } else {
+            console.log('no image');
+          }
+
+           const base641= btoa(new Uint8Array(item.creater.profile.avatar.data.data).reduce(function (data, byte) {
+             return data + String.fromCharCode(byte);
+         }, ''));
+        
+         const imgAvatar=`data:image/png;base64,${base641}`
+  
+
+   return (
+     <>
+    
+      <div style={style}>
+         <Cards key={index} index={index}  imgAvatar={imgAvatar} ondislike={ondislike} userId={a.id} likes={item.likes} id={item._id} name={item.creatername} date={item.date} image={img}  heading={item.heading} caption={item.caption} onlike={onlike} displayLike={lik} isMyPosts={false}></Cards>
+      </div>
+     </>
+     
+   )
+}
   return (
     <>
    {
@@ -131,95 +197,35 @@ const CardContainer = () => {
      dataLength={dataRedux.length}
      next={fetchMoreData1}
      hasMore={more}
-      refreshFunction={RefreshData}
-     scrollThreshold={0.7}
-      // scrollY={CurrentScroll}
      loader={ 
       <div style={{ display: 'flex',justifyContent:"center" }}>
-      <Box sx={{ display: 'flex',justifyContent:"center"}}>
-       <h4>Loading...</h4>
+      <Box sx={{ display: 'flex',justifyContent:"center" }}>
+      <h4 >Loading...</h4>
     </Box>
     </div>
     }
-    //  <h4>loading...</h4>
-     endMessage={
-      <p style={{ textAlign: "center" }}>
-        <b>Khatam!!!</b>
-      </p>
-    }
+   
+    //  endMessage={
+    //   <p style={{ textAlign: "center" }}>
+    //     <b>Khatam!!!</b>
+    //   </p>
+    //}
+    >  
+    <VariableSizeList
+    className="List"
+    height={900}
+    itemCount={itemCount}
+    itemSize={(index)=>getItemSize(index)}
+   
+    width={"100%"}
+    >
+        
+        {Item}
+    </VariableSizeList>    
     
-    pullDownToRefresh
-    pullDownToRefreshThreshold={50}
-    pullDownToRefreshContent={
-      <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-    }
-    releaseToRefreshContent={
-      <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-    }
-
-
-    >      
-    { dataRedux.map((element,index)=>{
-       let base64 = null;
-       let img=null;
-       if (element.image.data) {
-         base64 = btoa(
-           new Uint8Array(element.image.data.data).reduce(function (data, byte) {
-             return data + String.fromCharCode(byte);
-           }, '')
-         );
-        img=`data:image/png;base64,${base64}`;
-       } else {
-         console.log('no image');
-       }
-
-       
-
-        const base641= btoa(new Uint8Array(element.creater.profile.avatar.data.data).reduce(function (data, byte) {
-          return data + String.fromCharCode(byte);
-      }, ''));
-     
-      const imgAvatar=`data:image/png;base64,${base641}`
-
-
-       return (
-        <>
-        <div style={{display: 'flex',flexDirection: 'column',alignItems:"center"}}>
-         <Cards key={index} index={index}  imgAvatar={imgAvatar} ondislike={ondislike} userId={a.id} likes={element.likes} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onlike={onlike} displayLike={lik} isMyPosts={false}></Cards>
-        </div>
-        </>
-      )
-       
-    })}
 
 </InfiniteScroll>
-   : <div style={{display:"flex",alignSelf:"center",flexDirection:"column",alignItems:"center"}}> <Card elevation={3} sx={{  maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
-    <CardHeader avatar={<Skeleton variant="circular" animation="wave" width={70} height={70}></Skeleton>} 
-     title={<Skeleton  sx={{borderRadius:0}} animation="wave" ></Skeleton>} subheader={<Skeleton variant='rectangular' animation="wave"></Skeleton>} > 
-     </CardHeader>
-     <Skeleton variant="rectangular" animation="wave" sx={{ml:"10px",mr:"10px"}}></Skeleton>
-    
-      <Skeleton variant="rectangular" animation="wave" sx={{minHeight:"200px",minWidth:"250px",maxHeight:"300px",maxWidth:"100%",mt:2,position:"center",justifyContent:"center",objectFit:"scale-down"}}></Skeleton>
-
-    
-      
-    {/* <Skeleton >
-    </Skeleton> */}
-    </Card>
-    <Card elevation={3} sx={{  maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
-    <CardHeader avatar={<Skeleton variant="circular" animation="wave" width={70} height={70}></Skeleton>} 
-     title={<Skeleton  sx={{borderRadius:0}} animation="wave" ></Skeleton>} subheader={<Skeleton variant='rectangular' animation="wave"></Skeleton>} > 
-     </CardHeader>
-     <Skeleton variant="rectangular" animation="wave" sx={{ml:"10px",mr:"10px"}}></Skeleton>
-    
-      <Skeleton variant="rectangular" animation="wave" sx={{minHeight:"200px",minWidth:"250px",maxHeight:"300px",maxWidth:"100%",mt:2,position:"center",justifyContent:"center",objectFit:"scale-down"}}></Skeleton>
-
-    
-      
-    {/* <Skeleton >
-    </Skeleton> */}
-    </Card> 
-    </div>}
+   :<CardSkeleton></CardSkeleton>}
     </Paper>
 }
     </>

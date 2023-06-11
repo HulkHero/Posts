@@ -6,11 +6,12 @@ const bcrypt = require("bcrypt");
 const sharp = require('sharp')
 const { signup, login } = require("./users-controllers")
 const multer = require("multer");
-const Hello = require("./module");
-const Person = require("./models");
-const Story = require("./modelsStory");
-const Friends = require("./modelsFriends");
-const Profile = require("./ProfileModel");
+const Hello = require("./Models/module");
+const Person = require("./Models/models");
+const Story = require("./Models/modelsStory");
+const Friends = require("./Models/modelsFriends");
+const Profile = require("./Models/ProfileModel");
+const Comments = require("./Models/CommentsModel");
 const bodyParser = require("body-parser");
 const fs = require('fs');
 const cookieParser = require("cookie-parser");
@@ -47,26 +48,6 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/myPosts/:id', async (rek, res) => {
-  try {
-    id = rek.params.id
-    console.log("id: ", id)
-    if (id) {
-      const user = await Story.find({ creater: id })
-      res.status(202).send(user)
-
-
-    }
-  }
-  catch (error) {
-    res.status(400).json("ID not found.Your are not authorized")
-  }
-
-
-
-
-
-})
 
 app.delete("/deletePost/:id/:userid", async (rek, res) => {
   console.log("id ")
@@ -91,7 +72,40 @@ app.delete("/deletePost/:id/:userid", async (rek, res) => {
   }
 })
 
+app.post("/addComment/:postId/:userId", async (rek, res) => {
+  const postId = rek.params.postId;
+  const userId = rek.params.userId;
+  const comment = rek.body.text;
+  console.log("comment: ", comment)
+  console.log("postId: ", postId)
+  console.log("userId: ", userId)
+  if (postId && userId && comment) {
+    const newComment = new Comments({
+      _id: new mongoose.Types.ObjectId(),
+      comment: comment,
+      storyId: postId,
+      userId: userId,
+    });
+    await newComment.save();
+    res.status(200).json("Comment added");
+  }
+  else {
+    res.status(400).json("Error adding comment");
+  }
 
+})
+
+app.get("/getComments/:postId", async (rek, res) => {
+  const postId = rek.params.postId;
+  if (postId) {
+    const comments = await Comments.find({ storyId: postId }).populate({ path: 'userId', select: 'name', populate: { path: 'profile', select: 'avatar' } });
+    console.log("comments: ", comments)
+    res.status(200).json(comments);
+  }
+  else {
+    res.status(400).json("Error getting comments");
+  }
+})
 
 
 app.post("/signup", signup, (rek, res) => {
@@ -109,12 +123,6 @@ app.post("/login", login, (rek, res) => {
 })
 
 
-
-
-
-
-
-
 app.get("/data", auth, async (req, res) => {
   await Hello.find({}, (err, result) => {
     if (err) {
@@ -130,9 +138,6 @@ app.get("/data", auth, async (req, res) => {
     }
   }).clone().catch(function (err) { console.log(err) });
 });
-
-
-
 
 // stories an user 
 app.get("/", async (req, res) => {
@@ -167,10 +172,7 @@ app.get("/", async (req, res) => {
 // console.log(rek.userData, "userData")
 //auth,
 app.get("/batchData/:skip/:limit", async (rek, res) => {
-
   try {
-
-
     var skip = rek.params.skip;
     var limit = rek.params.limit;
     console.log(skip, limit)
@@ -270,6 +272,25 @@ const uploadProfile = multer({
     cb(undefined, true)
   }
 })
+
+app.get('/myPosts/:id', async (rek, res) => {
+  try {
+    id = rek.params.id
+    console.log("id: ", id)
+    if (id) {
+      const user = await Story.find({ creater: id })
+      res.send(user)
+    }
+  }
+  catch (error) {
+    console.log(error)
+    res.status(400).json("ID not found.Your are not authorized")
+  }
+
+
+
+})
+
 
 app.post('/addStory', uploadProfile.single("image"), async (rek, res) => {
   console.log("entering stories")
@@ -578,15 +599,16 @@ app.get("/showRekuests/:userId", async (rek, res) => {
 app.put("/acceptRekuest", async (rek, res) => {
   var userId = rek.body.senderId;
   var senId = rek.body.targetId;
-  // settings in user
+  // settings in user ->thanos->sent rekuest
+
   await Friends.findOneAndUpdate({ createrId: userId }, {
-    $pull: { rekuestRecieved: senId },
+    $pull: { rekuestSents: senId },
     $push: { friends: senId }
   });
 
-  // setting in rekuest sender                              
+  // setting in rekuest sender   ->hammad->rekuest recieved                          
   await Friends.findOneAndUpdate({ createrId: senId }, {
-    $pull: { rekuestSents: userId },
+    $pull: { rekuestRecieved: userId },
     $push: { friends: userId }
   });
 
