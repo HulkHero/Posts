@@ -1,5 +1,5 @@
 import React,{memo} from 'react'
-import { Card,CardHeader,Avatar,CardMedia,CardContent,Typography,CardActions,IconButton, Container, CardActionArea,Modal,Backdrop,Box,Fade,styled } from '@mui/material';
+import { Card,CardHeader,Avatar,CardMedia,CardContent,Typography,CardActions,IconButton, Container, CardActionArea,Modal,Backdrop,Box,Fade,styled ,Button} from '@mui/material';
 import {red} from"@mui/material/colors";
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -9,7 +9,7 @@ import { useContext } from 'react';
 import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import NoteContext from '../context/noteContext';
 import {useState,useEffect} from "react"
-
+import { useTheme } from '@mui/material';
 import "./fri.css"
 import CommentsModal from './Comments/CommentsModal';
 const style = {
@@ -52,23 +52,22 @@ const Cards = (props) => {
   const a= useContext(NoteContext)
   const [like, setLike] = useState(false)
   const [modal, setModal] = useState(false)
-  const [num, setnum] = useState(props.likes.length)
   const [animate, setAnimate] = useState(false)
+
+      
  // const base64= btoa(String.fromCharCode(...new Uint8Array(props.image)));
   var date = new Date(props.date);
   var options = {
     year: 'numeric', month: 'numeric', day: 'numeric',
 };
-let likess
 var result = date.toLocaleDateString('en', options);
-
-
+   const theme=useTheme();
   useEffect(() => {
     if (props.likes?.includes(a.id)){
       setLike(true)
     }
       
-  }, [])
+  }, [a.id])
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -78,20 +77,11 @@ var result = date.toLocaleDateString('en', options);
     setOpen(false);
   };
 
-
-  // useEffect(() => {
-  //   Axios.get(`http://localhost:5000/likes/${props.id}/${a.id}`).then((response)=>{
-          
-      
-  //   })
-
-
-  // }, [num])
   
   
 
   return (
-    <Card elevation={3} sx={{ alignSelf:"center",mr:"auto",ml:"auto", maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
+    <Card elevation={3} sx={{ mr:"auto",ml:"auto", maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
       <CardHeader
              sx={{":hover":{
               cursor:"default"
@@ -102,7 +92,7 @@ var result = date.toLocaleDateString('en', options);
           </Avatar>
         }
         action={
-          props.isMyPosts==true? 
+          props.isMyPosts===true? 
           <IconButton onClick={()=>{props.onDelete(props.id)}}>
            <DeleteIcon  ></DeleteIcon>
           </IconButton>:
@@ -127,7 +117,7 @@ var result = date.toLocaleDateString('en', options);
       >
         <Fade in={modal}>
           <Box sx={style}>
-           <img src={props.image} style={{height:"500px",width:"650px"}}>
+           <img src={props.image} alt='img' style={{height:"500px",width:"650px"}}>
            </img>
           </Box>
         </Fade>
@@ -155,19 +145,21 @@ var result = date.toLocaleDateString('en', options);
        }else{
           props.onlike(props.id,props.index);
           setLike(true)
+          setAnimate(true)
           // setnum(props.likes.length++)
         }}} >
-         {  like==true? <LikeIcon className={animate==true?"likeIconAnimation":" "}  />  :<FavoriteBorderIcon></FavoriteBorderIcon>    
+         {  like==true? <LikeIcon className={animate==true?"likeIconAnimation":" "}  />  :<FavoriteBorderIcon ></FavoriteBorderIcon>    
          }
         </IconButton>
         <Typography variant="body1" color="text.primary" sx={{alignSelf:"center"}}>{props.displayLikes? props.displayLikes :props.likes.length}</Typography>
         <Box sx={{ml:"auto", display:"flex",justifyContent:"center",alignItems:"center"}} >
-        <IconButton onClick={handleClickOpen}>
-           <CommentRoundedIcon/>
-        </IconButton>
-         <Typography variant="body2" color="text.primary" sx={{alignSelf:"center"}}>{`comments`}</Typography>
+        {/* <IconButton onClick={handleClickOpen}> */}
+           {/* <CommentRoundedIcon/> */}
+        {/* </IconButton> */}
+         <Button variant="text" disabled={!props.allowComments} onClick={handleClickOpen} sx={{color:`${theme.palette.grey[700]}`,textDecoration:"none"}} disableElevation={true} disableFocusRipple={true}    startIcon={<CommentRoundedIcon/>}>Comments</Button>
+         {/* <Typography variant="body2" color="text.primary" sx={{alignSelf:"center"}}>{`comments`}</Typography> */}
         </Box>
-        <CommentsModal userId={props.userId} postId={props.id} open={open} handleClickOpen={handleClickOpen} handleClose={handleClose} ></CommentsModal>
+        <CommentsModal  userId={props.userId} postId={props.id} open={open} handleClickOpen={handleClickOpen} handleClose={handleClose} ></CommentsModal>
         </CardActions>
         </Card>
         

@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useDispatch,useSelector } from 'react-redux';
 import { addData ,concatData, like,dislike,fetchMoreData,setSkip, RefreshAllData, fetchFirstData,setsavedScroll} from '../store';
 import {store} from "../store";
+import CardSkeleton from './Skeleton';
 
 const CardContainer = () => {
 
@@ -48,7 +49,7 @@ const CardContainer = () => {
       }
       else{
 
-        Axios.get(`https://nice-plum-panda-tam.cyclic.app/batchData/${skip}/${limit}`,{
+        Axios.get(`https://nice-plum-panda-tam.cyclic.app/batchData/${0}/${4}`,{
           headers:{
             authorization : a.token,
           }
@@ -135,11 +136,7 @@ const CardContainer = () => {
      scrollThreshold={0.7}
       // scrollY={CurrentScroll}
      loader={ 
-      <div style={{ display: 'flex',justifyContent:"center" }}>
-      <Box sx={{ display: 'flex',justifyContent:"center"}}>
-       <h4>Loading...</h4>
-    </Box>
-    </div>
+      <CardSkeleton></CardSkeleton>
     }
     //  <h4>loading...</h4>
      endMessage={
@@ -184,8 +181,8 @@ const CardContainer = () => {
 
        return (
         <>
-        <div style={{display: 'flex',flexDirection: 'column',alignItems:"center"}}>
-         <Cards key={index} index={index}  imgAvatar={imgAvatar} ondislike={ondislike} userId={a.id} likes={element.likes} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} onlike={onlike} displayLike={lik} isMyPosts={false}></Cards>
+        <div key={index} style={{display: 'flex',flexDirection: 'column',alignItems:"center"}}>
+         <Cards key={index} index={index}  imgAvatar={imgAvatar} ondislike={ondislike} userId={a.id} likes={element.likes} id={element._id} name={element.creatername} date={element.date} image={img}  heading={element.heading} caption={element.caption} allowComments={element.allowComments} onlike={onlike} displayLike={lik} isMyPosts={false}></Cards>
         </div>
         </>
       )
@@ -193,33 +190,10 @@ const CardContainer = () => {
     })}
 
 </InfiniteScroll>
-   : <div style={{display:"flex",alignSelf:"center",flexDirection:"column",alignItems:"center"}}> <Card elevation={3} sx={{  maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
-    <CardHeader avatar={<Skeleton variant="circular" animation="wave" width={70} height={70}></Skeleton>} 
-     title={<Skeleton  sx={{borderRadius:0}} animation="wave" ></Skeleton>} subheader={<Skeleton variant='rectangular' animation="wave"></Skeleton>} > 
-     </CardHeader>
-     <Skeleton variant="rectangular" animation="wave" sx={{ml:"10px",mr:"10px"}}></Skeleton>
-    
-      <Skeleton variant="rectangular" animation="wave" sx={{minHeight:"200px",minWidth:"250px",maxHeight:"300px",maxWidth:"100%",mt:2,position:"center",justifyContent:"center",objectFit:"scale-down"}}></Skeleton>
-
-    
-      
-    {/* <Skeleton >
-    </Skeleton> */}
-    </Card>
-    <Card elevation={3} sx={{  maxWidth:{xs:"95%",sm:"75%"}, minWidth:{xs:"95%",sm:"75%"},alignSelf:"center",mb:1,mt:2,borderRadius:"10px"}}>
-    <CardHeader avatar={<Skeleton variant="circular" animation="wave" width={70} height={70}></Skeleton>} 
-     title={<Skeleton  sx={{borderRadius:0}} animation="wave" ></Skeleton>} subheader={<Skeleton variant='rectangular' animation="wave"></Skeleton>} > 
-     </CardHeader>
-     <Skeleton variant="rectangular" animation="wave" sx={{ml:"10px",mr:"10px"}}></Skeleton>
-    
-      <Skeleton variant="rectangular" animation="wave" sx={{minHeight:"200px",minWidth:"250px",maxHeight:"300px",maxWidth:"100%",mt:2,position:"center",justifyContent:"center",objectFit:"scale-down"}}></Skeleton>
-
-    
-      
-    {/* <Skeleton >
-    </Skeleton> */}
-    </Card> 
-    </div>}
+   :  <Paper evaluation={2} style={{ minWidth: "100%", display: "flex:", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "95vh", backgroundColor: "whitesmoke" }} spacing={2}>
+   <> <CardSkeleton></CardSkeleton> <CardSkeleton></CardSkeleton><CardSkeleton></CardSkeleton></>
+ </Paper>
+   }
     </Paper>
 }
     </>

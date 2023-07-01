@@ -1,10 +1,10 @@
 import { configureStore, createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { produce } from 'immer';
+
 
 const dataSlice = createSlice({
     name: "data",
-    initialState: { value: {}, skip: 0, fetchMore: true, firstFetch: true, savedScroll: 0 },
+    initialState: { value: {}, skip: 2, fetchMore: true, firstFetch: true, savedScroll: 0 },
     reducers: {
         setSkip: (state, action) => {
             state.skip = state.skip + 2
@@ -67,9 +67,12 @@ const friendInitialState = { value: {}, loading: false, text: "", error: "" }
 
 const fetchFriends = createAsyncThunk(
     "friend/fetchFriends",
-    async (id) => {
-        const res = await axios.get(`https://nice-plum-panda-tam.cyclic.app/myFriends/${id}`)
-        console.log("inside fetch friends", res.data)
+    async (prop) => {
+        const res = await axios.get(`https://nice-plum-panda-tam.cyclic.app/myFriends/${prop.id}`, {
+            headers: {
+                Authorization: prop.authtoken
+            }
+        })
         return res.data
 
     }
@@ -82,6 +85,10 @@ const friendSlice = createSlice({
     reducers: {
         setFriends: (state, action) => {
             state.value = action.payload
+        },
+        deleteFriend: (state, action) => {
+            state.value = state.value.filter((val, index) => index != action.payload.index)
+            //state.value = state.value.filter((val) => val._id != action.payload)
         }
     },
     extraReducers: (builder) => {
@@ -108,7 +115,7 @@ const friendSlice = createSlice({
 })
 
 export { fetchFriends }
-export const { setFriends } = friendSlice.actions;
+export const { setFriends, deleteFriend } = friendSlice.actions;
 export const store = configureStore({
     reducer: {
         data: dataSlice.reducer,

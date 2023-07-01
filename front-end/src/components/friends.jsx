@@ -2,17 +2,15 @@ import * as React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
+
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import Axios from "axios";
 import NoteContext from "../context/noteContext";
-import {useState ,useEffect,useContext} from "react";
+import {useEffect,useContext} from "react";
 import "./fri.css"
 import FriendItem from './frienditem';
-import { setFriends,fetchFriends } from '../store';
+import { fetchFriends,deleteFriend } from '../store';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 export default function AlignItemsList() {
@@ -21,30 +19,32 @@ export default function AlignItemsList() {
     const dispatch = useDispatch();
  
     useEffect(() => {
-      if(a.id){ 
-        dispatch(fetchFriends(a.id));
+      if(a.id && a.token){ 
+        dispatch(fetchFriends({id:a.id,authtoken:a.token}));
       }
-    //  setText("Loading...")
-    // Axios.get( `https://nice-plum-panda-tam.cyclic.app/myFriends/${a.id}`).then((res) => {
-    //   console.log("resFriends",res)
-    //   if(res.data=="error2"){
-    //    setText("No Friends")
-    //   }
-    //   else{
-    //     setData(res.data)
-    //     dispatch(setFriends(res.data))
-    //   }
-    // }
-    //   ).catch((err) => {
-    //     setText("No Friends")
-    //     console.log(err)})
-    //   }
     }, [a.id])
+
+    const DeleteFriend=async (id,index)=>{
+     
+      console.log("inside sdas friend",index)
+      dispatch(deleteFriend({id:id,index:index}));
+
+      try{
+        const res= await Axios.delete(`https://nice-plum-panda-tam.cyclic.app/deleteFriend/${a.id}/${id}`,{headers:{"Authorization":a.token}})
+        if(res.status===200){
+        //  dispatch(fetchFriends({id:a.id,authtoken:a.token}));
+        }
+      }catch(err){
+        console.log(err)
+      }
+    }
     
     const dataRedux= useSelector((state) => state.friend.value);
     const loading= useSelector((state) => state.friend.loading);
     const text= useSelector((state) => state.friend.text);
-    console.log(dataRedux,"dataRedux")
+
+
+
   return (
     <> 
     <Card style={{minWidth:"100%",zIndex:"10000",minHeight:"100vh"}}>
@@ -66,7 +66,7 @@ export default function AlignItemsList() {
         const img=`data:image/png;base64,${base64}`
      return(
       <>
-       <FriendItem key={index}  props={element} img={img} id={a.id} ></FriendItem>
+       <FriendItem key={index} index={index} DeleteFriend={DeleteFriend}  props={element} img={img} id={a.id} ></FriendItem>
      </>)
     })
     : <>{loading? <Typography sx={{ml:"20px"}}>{text}</Typography>:<Typography sx={{ml:"20px"}}>No Friends</Typography>

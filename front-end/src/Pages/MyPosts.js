@@ -1,15 +1,17 @@
 import React from 'react'
 
-import { Paper, Button, Typography } from "@mui/material"
+import { Paper, } from "@mui/material"
 import { useState, useEffect, useContext } from 'react'
 import Cards from '../components/Cards';
 import Axios from "axios";
 import NoteContext from '../context/noteContext'
-
+import CardSkeleton from '../components/Skeleton';
+import { useQuery } from '@tanstack/react-query';
+import { useMyPostsRK } from '../reactKueries/MyPostsRK';
+import { useLikePostRK, useDisLikePostRK } from '../reactKueries/MyPostsRK';
 const MyPosts = () => {
   const a = useContext(NoteContext)
   const [lik, setLik] = useState()
-  const [text, setText] = useState("Loading...")
   if (a.token) { }
   else {
     const getToken = sessionStorage.getItem("token");
@@ -22,80 +24,66 @@ const MyPosts = () => {
       a.setcreatername(getcreatername)
     }
   }
+  const { isLoading, error, data, isError } = useMyPostsRK(a.id, a.token)
+  const { mutate: likePost } = useLikePostRK(a.id)
+  const { mutate: dislikePost } = useDisLikePostRK(a.id)
 
-  const [data, setData] = useState([]);
+  if (isLoading) {
 
-  useEffect(() => {
-    console.log("id in my posts", a.id)
-    const id = a.id
-    Axios.get(`https://nice-plum-panda-tam.cyclic.app/myPosts/${id}`, {
-      headers: {
+    return (
+      <Paper evaluation={2} style={{ minWidth: "100%", display: "flex:", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "95vh", backgroundColor: "whitesmoke" }} spacing={2}>
+        <> <CardSkeleton></CardSkeleton> <CardSkeleton></CardSkeleton></>
+      </Paper>
+    )
+  }
+  if (isError) {
+    return (
+      <Paper evaluation={2} style={{ minWidth: "100%", display: "flex:", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "95vh", backgroundColor: "whitesmoke" }} spacing={2}>
+        <h4 style={{ marginTop: 0, paddingTop: 4, textAlign: "center" }}>{error.messege}</h4>
+      </Paper>
+    )
 
-        'Authorization': a.token
-      }
-    }).then((response) => {
-      if (response.status == 400) {
-        alert("you are not authorized")
-        setText("You have not posted anything")
-      }
-      else {
-        setData(response.data);
-        console.log("return my posts", response.data)
-
-      }
-
-
-
-
-    }).catch(response => {
-      setText("you have not posted anything")
-    })
-
-  }, [a.id])
+  }
+  if (data.length == 0) {
+    return (
+      <Paper evaluation={2} style={{ minWidth: "100%", display: "flex:", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "95vh", backgroundColor: "whitesmoke" }} spacing={2}>
+        <h4 style={{ marginTop: 0, paddingTop: 4, textAlign: "center" }}>You have not posted anything yet</h4>
+      </Paper>
+    )
+  }
 
   const onDelete = (id) => {
 
     console.log("delete my posts", id)
-    Axios.delete(`https://nice-plum-panda-tam.cyclic.app/deletePost/${id}/${a.id}`).then((response) => {
+    Axios.delete(`https://nice-plum-panda-tam.cyclic.app/deletePost/${id}/${a.id}`, {
+      headers: {
+        Authorization: a.token
+      }
+    }).then((response) => {
       alert("post deleted")
-
-      setData(data.filter((val) => {
-        return val._id != id;
-      }))
     }
 
     )
   }
   const ondislike = (id) => {
-
-    Axios.put(`https://nice-plum-panda-tam.cyclic.app/dislikePost/${id}/${a.id}`).then((response) => {
-      setLik(response.data.likes.length);
-    })
-
+    dislikePost({ storyId: id, userId: a.id })
   }
+
+
   const onlike = (id) => {
     if (a.id) {
-      Axios.put(`https://nice-plum-panda-tam.cyclic.app/likePost/${id}/${a.id}`).then((response) => {
-
-        console.log("response:dislike", response)
-        setLik(response.data.likes.length);
-        console.log(lik)
-
-      })
-
+      likePost({ storyId: id, userId: a.id })
     }
-    else { console.log("login first") }
-
-
   }
+
 
 
   return (
     <>
 
-      <Paper evaluation={2} style={{ minWidth: "100%", display: "flex:", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100%", backgroundColor: "whitesmoke" }} spacing={2}>
+      <Paper evaluation={2} style={{ minWidth: "100%", display: "flex:", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "95vh", backgroundColor: "whitesmoke" }} spacing={2}>
 
-        {data.length > 0 ? data.map((element) => {
+        {data?.length > 0 ? data.map((element) => {
           let base64 = null;
           let img = null;
           if (element.image.data) {
@@ -111,13 +99,13 @@ const MyPosts = () => {
           return (
             <>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: "center" }}>
-                <Cards key={element._id} id={element._id} ondislike={ondislike} userId={a.id} likes={element.likes} name={element.creatername} date={element.date} image={img} heading={element.heading} caption={element.caption} onlike={onlike} displayLike={lik} onDelete={onDelete} isMyPosts={true} ></Cards>
+                <Cards key={element._id} id={element._id} ondislike={ondislike} userId={a.id} likes={element.likes} name={element.creatername} date={element.date} image={img} heading={element.heading} allowComments={element.allowComments} caption={element.caption} onlike={onlike} displayLike={lik} onDelete={onDelete} isMyPosts={true} ></Cards>
               </div>
             </>
           )
 
         })
-          : <Typography sx={{ ml: "auto", mr: "auto" }}>{text} </Typography>
+          : <> <CardSkeleton></CardSkeleton> <CardSkeleton></CardSkeleton></>
         }
 
 
